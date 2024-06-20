@@ -1,0 +1,91 @@
+{
+	"name": "dp_parameters",
+	"properties": {
+		"folder": {
+			"name": "core"
+		},
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "SynSalespool",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"runAsWorkspaceSystemIdentity": false,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "e8c9393b-0a9a-4847-963a-547b37cfe954"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"synapse_widget": {
+				"version": "0.1"
+			},
+			"enableDebugMode": false,
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/bb83342a-f18f-4eb9-af01-297fab968e48/resourceGroups/firstdf/providers/Microsoft.Synapse/workspaces/asfirstdf/bigDataPools/SynSalespool",
+				"name": "SynSalespool",
+				"type": "Spark",
+				"endpoint": "https://asfirstdf.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/SynSalespool",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net",
+					"authHeader": null
+				},
+				"sparkVersion": "3.4",
+				"nodeCount": 10,
+				"cores": 4,
+				"memory": 28,
+				"extraHeader": null
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"source": [
+					"bronze_layer_mount_path = \"/salesbronze\"\r\n",
+					"silver_layer_mount_path = \"/salessilver\", \r\n",
+					"gold_layer_mount_path= \"/salesgold\", \r\n",
+					"#datagovernance_layer_mount_path = \"/datagovernance\"\r\n",
+					"\r\n",
+					"adls_mount_linked_service = \"asfirstdf-WorkspaceDefaultStorage\"\r\n",
+					"\r\n",
+					"gold_managed_db = \"gold\"\r\n",
+					"\r\n",
+					"_mount_paths = {}\r\n",
+					"\r\n",
+					"#define the domain address\r\n",
+					"_adls_domain_address = \"dlakefirstadf.dfs.core.windows.net\" \r\n",
+					"\r\n",
+					"\r\n",
+					"#define mount paths\r\n",
+					"mount_path_bronze = \"abfss://salesbronze@\" + _adls_domain_address\r\n",
+					"mount_path_silver = \"abfss://salessilver@\" + _adls_domain_address\r\n",
+					"mount_path_gold = \"abfss://salesgold@\" + _adls_domain_address\r\n",
+					"\r\n",
+					"\r\n",
+					"#List of mount paths to be created later in the process\r\n",
+					"_mount_paths = {\r\n",
+					"    bronze_layer_mount_path: mount_path_bronze, \r\n",
+					"    silver_layer_mount_path: mount_path_silver, \r\n",
+					"    gold_layer_mount_path: mount_path_gold, \r\n",
+					"    #datagovernance_layer_mount_path : mount_path_datagovernance,\r\n",
+					"}"
+				],
+				"execution_count": 1
+			}
+		]
+	}
+}

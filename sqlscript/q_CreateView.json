@@ -1,0 +1,17 @@
+{
+	"name": "q_CreateView",
+	"properties": {
+		"content": {
+			"query": "CREATE VIEW customer\nAS\nSELECT\n    *\nFROM\n    OPENROWSET(\n        BULK 'https://dlakefirstadf.dfs.core.windows.net/salesgold/dbo/Customer/',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "salesgold_db",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

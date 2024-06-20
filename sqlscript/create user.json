@@ -1,0 +1,17 @@
+{
+	"name": "create user",
+	"properties": {
+		"content": {
+			"query": "CREATE LOGIN mariam WITH PASSWORD = 'AzureLogin1.'\n\ncreate user mariam for login mariam",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "salesgold_db",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

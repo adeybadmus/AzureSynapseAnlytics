@@ -1,0 +1,19 @@
+{
+	"name": "salesgoldtables",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "asfirstdf-WorkspaceDefaultStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "dbo",
+				"fileSystem": "salesgold"
+			}
+		}
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}

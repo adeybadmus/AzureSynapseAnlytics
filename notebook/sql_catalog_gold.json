@@ -1,0 +1,53 @@
+{
+	"name": "sql_catalog_gold",
+	"properties": {
+		"folder": {
+			"name": "sql_catalog"
+		},
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"runAsWorkspaceSystemIdentity": false,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "1aa3f077-79c1-4d0f-89a0-4cc8bef28da7"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"synapse_widget": {
+				"version": "0.1"
+			},
+			"enableDebugMode": false,
+			"language_info": {
+				"name": "python"
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"source": [
+					"from enum import Enum\r\n",
+					"class SQLCatalogGold(Enum):\r\n",
+					"\r\n",
+					"    # Select SelectMaxKey\r\n",
+					"\r\n",
+					"\r\n",
+					"\r\n",
+					"\r\n",
+					"    # Select Entities\r\n",
+					"    select_customers = \"sql_catalogs/gold/select/SelectCustomer.sql\"\r\n",
+					""
+				]
+			}
+		]
+	}
+}
