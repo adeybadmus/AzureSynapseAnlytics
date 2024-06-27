@@ -1,0 +1,21 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"value": "asfirstdf"
+		},
+		"asfirstdf-WorkspaceDefaultSqlServer_connectionString": {
+			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:asfirstdf.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
+		},
+		"severlessSQLdb_connectionString": {
+			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=asfirstdf-ondemand.sql.azuresynapse.net;Initial Catalog=gold_db"
+		},
+		"severlessSQlSalesdb_connectionString": {
+			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=asfirstdf-ondemand.sql.azuresynapse.net;Initial Catalog=salesgold_db"
+		},
+		"asfirstdf-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://dlakefirstadf.dfs.core.windows.net"
+		}
+	}
+}
