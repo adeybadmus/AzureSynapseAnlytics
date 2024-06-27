@@ -21,15 +21,16 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "7f5cc3d5-58e9-441d-be44-21a0ea2dc8cc"
+				"spark.autotune.trackingId": "2d281533-f412-476c-a2ea-66b10aafa091"
 			}
 		},
 		"metadata": {
 			"saveOutput": true,
-			"synapse_widget": {
-				"version": "0.1"
-			},
 			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
 			"language_info": {
 				"name": "python"
 			},
@@ -40,14 +41,13 @@
 				"endpoint": "https://asfirstdf.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/SynSalespool",
 				"auth": {
 					"type": "AAD",
-					"authResource": "https://dev.azuresynapse.net",
-					"authHeader": null
+					"authResource": "https://dev.azuresynapse.net"
 				},
 				"sparkVersion": "3.4",
 				"nodeCount": 10,
 				"cores": 4,
 				"memory": 28,
-				"extraHeader": null
+				"automaticScaleJobs": false
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -196,9 +196,7 @@
 				},
 				"source": [
 					"customer_bronze_path = f\"{mount_path_bronze}\" + \"/\" + \"dbo/Customer\"\r\n",
-					"\r\n",
 					"print(customer_bronze_path)\r\n",
-					"\r\n",
 					"customerBronzeDF = (spark.read.load(customer_bronze_path, format='parquet'))\r\n",
 					"\r\n",
 					"customerBronzeDF.createOrReplaceTempView(\"bronzeCustomerTable\")\r\n",
@@ -346,7 +344,8 @@
 				"source": [
 					"from pyspark.sql import SparkSession\r\n",
 					""
-				]
+				],
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -368,7 +367,8 @@
 				"source": [
 					"%%sql\r\n",
 					"select id, city from bronzeCustomerTable where country = 'Spain'"
-				]
+				],
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -391,7 +391,8 @@
 					"%%sql\r\n",
 					"select * from bronzeCustomerTable\r\n",
 					"limit 5"
-				]
+				],
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -430,7 +431,8 @@
 					"\r\n",
 					"QueryStoreCustomerBronzeDF.createOrReplaceTempView(\"bronzeQueryStoreCustomerTable\")\r\n",
 					"display(QueryStoreCustomerBronzeDF)"
-				]
+				],
+				"execution_count": 1
 			},
 			{
 				"cell_type": "markdown",
@@ -465,7 +467,8 @@
 				"source": [
 					"%%sql\r\n",
 					"select * from bronzeQueryStoreCustomerTable where id = 1000"
-				]
+				],
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -487,7 +490,8 @@
 				"source": [
 					"%%sql\r\n",
 					"select * from bronzeQueryStoreCustomerTable where id = 2"
-				]
+				],
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -521,7 +525,8 @@
 				"source": [
 					"%%sql\r\n",
 					"select * from bronzeQueryStoreCustomerTable where ID = 100"
-				]
+				],
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -556,7 +561,8 @@
 				"source": [
 					"%%sql\r\n",
 					"select * from bronzeQueryStoreCustomerTable where FirstName like '%Adey%'"
-				]
+				],
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -591,7 +597,8 @@
 				"source": [
 					"%%sql\r\n",
 					"select * from BronzeCustomerTable where Id Not in  (select id from bronzeQueryStoreCustomerTable)"
-				]
+				],
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -626,7 +633,8 @@
 				"source": [
 					"%%sql\r\n",
 					"select * from bronzeQueryStoreCustomerTable where Id Not in  (select id from BronzeCustomerTable)"
-				]
+				],
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -660,7 +668,8 @@
 				"source": [
 					"%%sql \r\n",
 					"select count (*)  from BronzeCustomerTable where ID in (select id from bronzeQueryStoreCustomerTable)"
-				]
+				],
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -695,7 +704,8 @@
 				"source": [
 					"%%sql\r\n",
 					"select * from BronzeCustomerTable where City in  ('Grays', 'London')"
-				]
+				],
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -760,7 +770,8 @@
 				},
 				"source": [
 					""
-				]
+				],
+				"execution_count": null
 			}
 		]
 	}
