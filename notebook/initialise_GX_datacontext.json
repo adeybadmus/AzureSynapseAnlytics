@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "fff889fc-ef58-4425-a2b3-ebaf52486726"
+				"spark.autotune.trackingId": "e372f9eb-693a-40ce-a9c1-dd7bd7a7773e"
 			}
 		},
 		"metadata": {
@@ -67,12 +67,12 @@
 				"source": [
 					"pip install great_expectations"
 				],
-				"execution_count": 3
+				"execution_count": 6
 			},
 			{
 				"cell_type": "code",
 				"source": [
-					"import great_expectations as gx"
+					"import great_expectations as ge"
 				],
 				"execution_count": null
 			},
