@@ -2069,12 +2069,12 @@
 					"driverCores": 4,
 					"executorMemory": "28g",
 					"executorCores": 4,
-					"numExecutors": 2,
+					"numExecutors": 3,
 					"conf": {
-						"spark.dynamicAllocation.enabled": "false",
-						"spark.dynamicAllocation.minExecutors": "2",
-						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "2d7b47bd-1caf-4b2d-acf8-cdabb831ea22"
+						"spark.dynamicAllocation.enabled": "true",
+						"spark.dynamicAllocation.minExecutors": "3",
+						"spark.dynamicAllocation.maxExecutors": "18",
+						"spark.autotune.trackingId": "8e730462-69c2-4b26-b876-b15b19dbe7df"
 					}
 				},
 				"metadata": {
@@ -2110,7 +2110,7 @@
 							"%run helpers/dp_common_executions"
 						],
 						"outputs": [],
-						"execution_count": 3
+						"execution_count": 8
 					},
 					{
 						"cell_type": "code",
