@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "2f51158b-9b33-4a94-b37e-2ec08b4fee98"
+				"spark.autotune.trackingId": "fff889fc-ef58-4425-a2b3-ebaf52486726"
 			}
 		},
 		"metadata": {
@@ -67,7 +67,7 @@
 				"source": [
 					"pip install great_expectations"
 				],
-				"execution_count": 4
+				"execution_count": 3
 			},
 			{
 				"cell_type": "code",
@@ -208,7 +208,49 @@
 				},
 				"source": [
 					"def prepare_get_datasource(dname:str = 'DataFrame_Tenant_Source') ->:\r\n",
-					"    ge_data"
+					"    ge_dataframe_datasource = {\r\n",
+					"        \"name\" : dname,\r\n",
+					"        \"class_name\" : \"Datasource\",\r\n",
+					"        \"execution_engine\" : {\"class_name\": \"SparkDFExecutionEngine\", \"module_name\": \"great_expectation_engine\",},\r\n",
+					"        \"data_connectors\" : {\r\n",
+					"            \"DataFrame_Tenant_Data_Connector\":{\r\n",
+					"            \"module_name\": \"great_expectatations.datasource.data_connector\",\r\n",
+					"            \"class_name\": \"RuntimeDataConnector\",\r\n",
+					"            \"batch_spec_passthrough\": {\r\n",
+					"                \"reader_method\": \"delta\",\r\n",
+					"                \"reader_options\": {\r\n",
+					"                    \"header\": True,\r\n",
+					"                    \"inferSchema\": True,\r\n",
+					"                },\r\n",
+					"            },\r\n",
+					"            \"batch_identifienrs\": {\r\n",
+					"                \"tenantrs_source\"\r\n",
+					"            },\r\n",
+					"\r\n",
+					"            }\r\n",
+					"            \r\n",
+					"        },\r\n",
+					"    }\r\n",
+					"    return ge_dataframe_datasource"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Prepare DataFrame for Data Source Connector to GE\r\n",
+					"ge_context.add_datasource(**prepare_get_datasource())"
 				],
 				"execution_count": null
 			}
