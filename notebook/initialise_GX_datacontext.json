@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "7570d8b0-70fa-4c71-9168-b26048d7982e"
+				"spark.autotune.trackingId": "cc0d9d9e-fa73-41f4-b7a9-58321e9f6277"
 			}
 		},
 		"metadata": {
@@ -67,14 +67,14 @@
 				"source": [
 					"pip install great_expectations"
 				],
-				"execution_count": null
+				"execution_count": 21
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"import great_expectations as ge"
 				],
-				"execution_count": 3
+				"execution_count": 18
 			},
 			{
 				"cell_type": "markdown",
@@ -125,7 +125,7 @@
 					")\r\n",
 					"from great_expectations.data_context import EphemeralDataContext"
 				],
-				"execution_count": 4
+				"execution_count": 9
 			},
 			{
 				"cell_type": "markdown",
@@ -160,7 +160,7 @@
 					"ge_context = EphemeralDataContext(project_config=project_config)\r\n",
 					"ge_context.build_data_docs()"
 				],
-				"execution_count": 5
+				"execution_count": 10
 			},
 			{
 				"cell_type": "markdown",
@@ -191,7 +191,7 @@
 				"source": [
 					"%run read_bronze_data"
 				],
-				"execution_count": 6
+				"execution_count": 11
 			},
 			{
 				"cell_type": "code",
@@ -207,7 +207,7 @@
 					}
 				},
 				"source": [
-					"def prepare_get_datasource(dname:str = 'DataFrame_Tenant_Source') ->:\r\n",
+					"def prepare_get_datasource(dname:str = 'DataFrame_Tenant_Source') -> dict:\r\n",
 					"    ge_dataframe_datasource = {\r\n",
 					"        \"name\" : dname,\r\n",
 					"        \"class_name\" : \"Datasource\",\r\n",
@@ -233,7 +233,7 @@
 					"    }\r\n",
 					"    return ge_dataframe_datasource"
 				],
-				"execution_count": null
+				"execution_count": 13
 			},
 			{
 				"cell_type": "code",
@@ -292,7 +292,38 @@
 					"        runtime_parameters={\"batch_data\": df},\r\n",
 					"    )"
 				],
-				"execution_count": null
+				"execution_count": 15
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Create Expectations"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"ge_context.list_expectations_suite_names()"
+				],
+				"execution_count": 16
 			}
 		]
 	}
