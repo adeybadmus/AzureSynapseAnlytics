@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "true",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "a2693e02-6d1d-49d1-9d28-1e277e649bf8"
+				"spark.autotune.trackingId": "9d03f2d2-3654-44ad-80a5-5b130636dd6c"
 			}
 		},
 		"metadata": {
@@ -65,7 +65,7 @@
 					}
 				},
 				"source": [
-					"pip install pyspark"
+					"# pip install pyspark"
 				],
 				"execution_count": 88
 			},
@@ -85,14 +85,14 @@
 				"source": [
 					"pip install great_expectations"
 				],
-				"execution_count": 82
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"import great_expectations as ge"
 				],
-				"execution_count": 83
+				"execution_count": 7
 			},
 			{
 				"cell_type": "markdown",
@@ -143,7 +143,7 @@
 					")\r\n",
 					"from great_expectations.data_context import EphemeralDataContext"
 				],
-				"execution_count": 84
+				"execution_count": 8
 			},
 			{
 				"cell_type": "markdown",
@@ -178,7 +178,7 @@
 					"ge_context = EphemeralDataContext(project_config=project_config)\r\n",
 					"ge_context.build_data_docs()"
 				],
-				"execution_count": 85
+				"execution_count": 9
 			},
 			{
 				"cell_type": "markdown",
@@ -209,7 +209,7 @@
 				"source": [
 					"%run test/read_silver_data"
 				],
-				"execution_count": 87
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -225,7 +225,7 @@
 					}
 				},
 				"source": [
-					"def prepare_get_datasource(dname:str = 'DataFrame_Customer_Data_Connector') -> dict:\r\n",
+					"def prepare_get_datasource(dname:str = 'DataFrame_Customer_Source') -> dict:\r\n",
 					"    ge_dataframe_datasource = {\r\n",
 					"        \"name\" : dname,\r\n",
 					"        \"class_name\" : \"Datasource\",\r\n",
@@ -251,7 +251,7 @@
 					"    }\r\n",
 					"    return ge_dataframe_datasource"
 				],
-				"execution_count": 75
+				"execution_count": 57
 			},
 			{
 				"cell_type": "code",
@@ -273,9 +273,46 @@
 					"#my_asset = ge_context.get_datasource(\"my_datasource\").get_asset(\"my_asset\")\r\n",
 					"\r\n",
 					"ge_context.add_datasource(**prepare_get_datasource())\r\n",
-					"print(ge_context)"
+					"#print(ge_context)"
 				],
-				"execution_count": 80
+				"execution_count": 62
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# ge_context.delete_datasource('DataFrame_Customer_Data_Connector')"
+				],
+				"execution_count": 68
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"ge_context.get_available_data_asset_names()\r\n",
+					""
+				],
+				"execution_count": 69
 			},
 			{
 				"cell_type": "markdown",
@@ -316,7 +353,7 @@
 					"    )\r\n",
 					"    return batch_request"
 				],
-				"execution_count": 60
+				"execution_count": 58
 			},
 			{
 				"cell_type": "markdown",
@@ -364,7 +401,7 @@
 				"source": [
 					"ge_context.list_expectation_suite_names()"
 				],
-				"execution_count": 61
+				"execution_count": 31
 			},
 			{
 				"cell_type": "code",
@@ -481,7 +518,62 @@
 					"ge_context.add_or_update_expectation_suite(expectation_suite_name='customers_suite')\r\n",
 					""
 				],
-				"execution_count": 59
+				"execution_count": 32
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"display(customerSilverDF)"
+				],
+				"execution_count": 43
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"ge_context.get_available_data_asset_names()"
+				],
+				"execution_count": 63
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"#ge_context.delete_datasource('DataFrame_Customer_Data_Connector')"
+				],
+				"execution_count": 48
 			},
 			{
 				"cell_type": "code",
@@ -498,21 +590,52 @@
 				},
 				"source": [
 					"customers_batch_request = prepare_runtime_batch(customerSilverDF)\r\n",
-					"print(customers_batch_request)\r\n",
+					"#print(customers_batch_request)\r\n",
 					"validator = ge_context.get_validator(\r\n",
-					"    # datasource_name=customers_batch_request.datasource_name,\r\n",
-					"    # data_connector_name=customers_batch_request.data_connector_name, \r\n",
-					"    # data_asset_name=customers_batch_request.data_asset_name\r\n",
+					"    #datasource_name=customers_batch_request.datasource_name,\r\n",
+					"    #data_connector_name=customers_batch_request.data_connector_name, \r\n",
+					"    #data_asset_name=customers_batch_request.data_asset_name\r\n",
 					"    batch_request=customers_batch_request,\r\n",
 					"    expectation_suite_name='customers_suite'\r\n",
 					")\r\n",
 					"\r\n",
-					"# print(validator.head())\r\n",
+					"print(validator.head())\r\n",
 					"\r\n",
 					"\r\n",
 					"   "
 				],
-				"execution_count": 63
+				"execution_count": 71
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# 7. Prepare and Run Checkpoint"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					""
+				],
+				"execution_count": null
 			}
 		]
 	}
