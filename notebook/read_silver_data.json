@@ -7,20 +7,20 @@
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
-			"referenceName": "SynSalespool",
+			"referenceName": "spareSparkPool",
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
-			"driverMemory": "28g",
-			"driverCores": 4,
-			"executorMemory": "28g",
-			"executorCores": 4,
-			"numExecutors": 2,
+			"driverMemory": "56g",
+			"driverCores": 8,
+			"executorMemory": "56g",
+			"executorCores": 8,
+			"numExecutors": 1,
 			"conf": {
 				"spark.dynamicAllocation.enabled": "true",
-				"spark.dynamicAllocation.minExecutors": "2",
-				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "6389c61c-44d7-40eb-9424-5756b6285db4"
+				"spark.dynamicAllocation.minExecutors": "1",
+				"spark.dynamicAllocation.maxExecutors": "4",
+				"spark.autotune.trackingId": "9ae5359b-dfb5-44c5-ac91-323ddf6e6fd6"
 			}
 		},
 		"metadata": {
@@ -34,10 +34,10 @@
 				"name": "python"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/bb83342a-f18f-4eb9-af01-297fab968e48/resourceGroups/firstdf/providers/Microsoft.Synapse/workspaces/asfirstdf/bigDataPools/SynSalespool",
-				"name": "SynSalespool",
+				"id": "/subscriptions/bb83342a-f18f-4eb9-af01-297fab968e48/resourceGroups/firstdf/providers/Microsoft.Synapse/workspaces/asfirstdf/bigDataPools/spareSparkPool",
+				"name": "spareSparkPool",
 				"type": "Spark",
-				"endpoint": "https://asfirstdf.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/SynSalespool",
+				"endpoint": "https://asfirstdf.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/spareSparkPool",
 				"auth": {
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
@@ -46,7 +46,7 @@
 				"nodeCount": 10,
 				"cores": 4,
 				"memory": 28,
-				"automaticScaleJobs": false
+				"automaticScaleJobs": true
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -67,7 +67,7 @@
 				"source": [
 					"pip install apache-sedona"
 				],
-				"execution_count": null
+				"execution_count": 1
 			},
 			{
 				"cell_type": "code",
@@ -85,7 +85,7 @@
 				"source": [
 					"pip install keplergl"
 				],
-				"execution_count": 5
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -103,7 +103,7 @@
 				"source": [
 					"pip install pydeck"
 				],
-				"execution_count": 6
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -123,14 +123,14 @@
 					"from sedona.spark import *\r\n",
 					"from notebookutils import mssparkutils"
 				],
-				"execution_count": 7
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"%run helpers/dp_common_executions"
 				],
-				"execution_count": 8
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -148,7 +148,7 @@
 				"source": [
 					"sedona = SedonaContext.create"
 				],
-				"execution_count": 9
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -166,7 +166,7 @@
 				"source": [
 					"%run helpers/dp_common_executions"
 				],
-				"execution_count": 10
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -190,7 +190,7 @@
 					"customerSilverDF.createOrReplaceTempView(\"silverCustomerTable\")\r\n",
 					""
 				],
-				"execution_count": 15
+				"execution_count": null
 			}
 		]
 	}
