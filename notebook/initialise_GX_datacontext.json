@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "true",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "9d03f2d2-3654-44ad-80a5-5b130636dd6c"
+				"spark.autotune.trackingId": "a946a7ee-7f20-4b23-af06-f89a4970c41a"
 			}
 		},
 		"metadata": {
@@ -633,7 +633,121 @@
 					}
 				},
 				"source": [
-					""
+					"def prepare_checkpoint() -> dict:\r\n",
+					"    ge_tenant_data_checkpoint = 'tenant_check'\r\n",
+					"    checkpoint_config = {\r\n",
+					"        \"name\":ge_customer_data_checkpoint,\r\n",
+					"        \"config_version\":1.0,\r\n",
+					"        \"class_name\":\"SimpleCheckpoimt\",\r\n",
+					"        \"run_name_template\": \"%Y%m%d-%H%M%S-cutomer-run\",\r\n",
+					"        \"action_list\": [\r\n",
+					"            {\r\n",
+					"                \"name\": \"store_validation_result\",\r\n",
+					"                \"action\": {\r\n",
+					"                    \"class_name\": \"StoreValidationResultAction\",\r\n",
+					"                },\r\n",
+					"            },\r\n",
+					"            {\r\n",
+					"                \"name\": \"store_evaluation_params\",\r\n",
+					"                \"action\": {\r\n",
+					"                    \"class_name\": \"StoreEvaluationParametersAction\",\r\n",
+					"                    },\r\n",
+					"            },\r\n",
+					"            {\r\n",
+					"                \"name\": \"update_data_docss\",\r\n",
+					"                \"action\": {\r\n",
+					"                    \"class_name\": \"UpdateDataDocsAction\",\r\n",
+					"                },\r\n",
+					"            },\r\n",
+					"        ],\r\n",
+					"    }\r\n",
+					"    return checkpoint_config"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"def run_checkpoint(context, batch_request):\r\n",
+					"    checkpoint_result = context.run_checkpoint(\r\n",
+					"        checkpoint_name=\"customer_check\",\r\n",
+					"        validations=[\r\n",
+					"            {\r\n",
+					"                \"batch_request\": batch_request,\r\n",
+					"                \"expectation_suite_name\": \"customers_suite\",\r\n",
+					"            }\r\n",
+					"        ],\r\n",
+					"    )\r\n",
+					"    return checkpoint_result"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"#ge_contect.delet_checkpoint(\"customer_check\")"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"#Prepare Checkpoint\r\n",
+					"customer_check = prepare_checkpoint()\r\n",
+					"ge_context.add_checkpoint(**customer_check)"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"ge_context.list_expectation_suites()\r\n",
+					"ge_context = ge_contect.get_expectation_suite(\"customers_suite\")\r\n",
+					"ge_suite.show_expectations_by_expectation_type()"
 				],
 				"execution_count": null
 			}
