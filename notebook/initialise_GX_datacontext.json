@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "true",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "14723e52-0e76-48c8-9bef-2aae1ec270df"
+				"spark.autotune.trackingId": "a2693e02-6d1d-49d1-9d28-1e277e649bf8"
 			}
 		},
 		"metadata": {
@@ -67,7 +67,7 @@
 				"source": [
 					"pip install pyspark"
 				],
-				"execution_count": 81
+				"execution_count": 88
 			},
 			{
 				"cell_type": "code",
