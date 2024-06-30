@@ -1806,7 +1806,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "7570d8b0-70fa-4c71-9168-b26048d7982e"
+						"spark.autotune.trackingId": "2a11756f-96d9-45e5-bf43-f8fcbbb2c490"
 					}
 				},
 				"metadata": {
@@ -1831,7 +1831,8 @@
 						"sparkVersion": "3.4",
 						"nodeCount": 10,
 						"cores": 4,
-						"memory": 28
+						"memory": 28,
+						"automaticScaleJobs": false
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -1853,15 +1854,16 @@
 							"pip install great_expectations"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 21
 					},
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"import great_expectations as ge"
 						],
 						"outputs": [],
-						"execution_count": 3
+						"execution_count": 18
 					},
 					{
 						"cell_type": "markdown",
@@ -1913,7 +1915,7 @@
 							"from great_expectations.data_context import EphemeralDataContext"
 						],
 						"outputs": [],
-						"execution_count": 4
+						"execution_count": 9
 					},
 					{
 						"cell_type": "markdown",
@@ -1949,7 +1951,7 @@
 							"ge_context.build_data_docs()"
 						],
 						"outputs": [],
-						"execution_count": 5
+						"execution_count": 10
 					},
 					{
 						"cell_type": "markdown",
@@ -1981,7 +1983,7 @@
 							"%run read_bronze_data"
 						],
 						"outputs": [],
-						"execution_count": 6
+						"execution_count": 11
 					},
 					{
 						"cell_type": "code",
@@ -1997,7 +1999,7 @@
 							}
 						},
 						"source": [
-							"def prepare_get_datasource(dname:str = 'DataFrame_Tenant_Source') ->:\r\n",
+							"def prepare_get_datasource(dname:str = 'DataFrame_Tenant_Source') -> dict:\r\n",
 							"    ge_dataframe_datasource = {\r\n",
 							"        \"name\" : dname,\r\n",
 							"        \"class_name\" : \"Datasource\",\r\n",
@@ -2024,7 +2026,7 @@
 							"    return ge_dataframe_datasource"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 13
 					},
 					{
 						"cell_type": "code",
@@ -2085,7 +2087,39 @@
 							"    )"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 15
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"# Create Expectations"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"ge_context.list_expectations_suite_names()"
+						],
+						"outputs": [],
+						"execution_count": 16
 					}
 				]
 			},
@@ -2115,7 +2149,7 @@
 						"spark.dynamicAllocation.enabled": "true",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "a55e1216-59e3-49bc-b307-5f867b0c8d99"
+						"spark.autotune.trackingId": "c4b1c8dd-d483-456d-aecd-13ffe75423c1"
 					}
 				},
 				"metadata": {
@@ -2140,15 +2174,13 @@
 						"sparkVersion": "3.4",
 						"nodeCount": 10,
 						"cores": 4,
-						"memory": 28,
-						"automaticScaleJobs": false
+						"memory": 28
 					},
 					"sessionKeepAliveTimeout": 30
 				},
 				"cells": [
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"%run helpers/dp_common_executions"
 						],
