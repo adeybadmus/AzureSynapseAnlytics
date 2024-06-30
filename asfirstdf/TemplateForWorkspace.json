@@ -32,15 +32,6 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('workspaceName'), '/spareSparkPool')]",
-			"type": "Microsoft.Synapse/workspaces/bigDataPools",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('workspaceName'), '/create_sales_view')]",
 			"type": "Microsoft.Synapse/workspaces/pipelines",
 			"apiVersion": "2019-06-01-preview",
@@ -1815,7 +1806,7 @@
 						"spark.dynamicAllocation.enabled": "true",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "14723e52-0e76-48c8-9bef-2aae1ec270df"
+						"spark.autotune.trackingId": "38991edb-0d71-4157-8b69-aa15b3ce7c50"
 					}
 				},
 				"metadata": {
@@ -1840,7 +1831,8 @@
 						"sparkVersion": "3.4",
 						"nodeCount": 10,
 						"cores": 4,
-						"memory": 28
+						"memory": 28,
+						"automaticScaleJobs": false
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -1862,7 +1854,7 @@
 							"pip install pyspark"
 						],
 						"outputs": [],
-						"execution_count": 81
+						"execution_count": 88
 					},
 					{
 						"cell_type": "code",
@@ -1885,6 +1877,7 @@
 					},
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"import great_expectations as ge"
 						],
@@ -2350,7 +2343,7 @@
 						"spark.dynamicAllocation.enabled": "true",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "00a02bc3-9d12-45e3-ad05-fa522393e46a"
+						"spark.autotune.trackingId": "5440a929-7329-4adc-b87c-e45e12fa5caa"
 					}
 				},
 				"metadata": {
@@ -2461,7 +2454,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "dd156cfc-de0f-46cc-9d7f-8bf2156f56a3"
+						"spark.autotune.trackingId": "bafc978c-588f-49c7-808a-ae2cea43b1ff"
 					}
 				},
 				"metadata": {
@@ -2805,31 +2798,6 @@
 				"autoPause": {
 					"enabled": true,
 					"delayInMinutes": 5
-				},
-				"autoScale": {
-					"enabled": true,
-					"maxNodeCount": 11,
-					"minNodeCount": 3
-				},
-				"nodeCount": 10,
-				"nodeSize": "Small",
-				"nodeSizeFamily": "MemoryOptimized",
-				"sparkVersion": "3.4",
-				"isComputeIsolationEnabled": false,
-				"sessionLevelPackagesEnabled": false,
-				"annotations": []
-			},
-			"dependsOn": [],
-			"location": "eastus"
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/spareSparkPool')]",
-			"type": "Microsoft.Synapse/workspaces/bigDataPools",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"autoPause": {
-					"enabled": true,
-					"delayInMinutes": 15
 				},
 				"autoScale": {
 					"enabled": true,
