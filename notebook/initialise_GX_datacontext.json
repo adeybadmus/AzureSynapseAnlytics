@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "8bf312ed-9c8a-42c5-9b07-6342f87818f5"
+				"spark.autotune.trackingId": "7570d8b0-70fa-4c71-9168-b26048d7982e"
 			}
 		},
 		"metadata": {
@@ -67,14 +67,14 @@
 				"source": [
 					"pip install great_expectations"
 				],
-				"execution_count": 6
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"import great_expectations as ge"
 				],
-				"execution_count": null
+				"execution_count": 3
 			},
 			{
 				"cell_type": "markdown",
@@ -125,7 +125,7 @@
 					")\r\n",
 					"from great_expectations.data_context import EphemeralDataContext"
 				],
-				"execution_count": null
+				"execution_count": 4
 			},
 			{
 				"cell_type": "markdown",
@@ -160,7 +160,7 @@
 					"ge_context = EphemeralDataContext(project_config=project_config)\r\n",
 					"ge_context.build_data_docs()"
 				],
-				"execution_count": null
+				"execution_count": 5
 			},
 			{
 				"cell_type": "markdown",
@@ -191,7 +191,7 @@
 				"source": [
 					"%run read_bronze_data"
 				],
-				"execution_count": null
+				"execution_count": 6
 			},
 			{
 				"cell_type": "code",
@@ -251,6 +251,46 @@
 				"source": [
 					"# Prepare DataFrame for Data Source Connector to GE\r\n",
 					"ge_context.add_datasource(**prepare_get_datasource())"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Create a Validator"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"def prepare_runtime_batch(df:DataFrame):\r\n",
+					"    batch_request = RuntimeBatchRequest(\r\n",
+					"        datasource_name=\"DataFrame_Tenants_Source\",\r\n",
+					"        data_connector_name=\"DataFrame_Tenant_Data_Connector\",\r\n",
+					"        data_asset_name=\"tenant_data_batch\",\r\n",
+					"        batch_identifiers={\r\n",
+					"            \"tenants_source\": \"tenants_spurce\",\r\n",
+					"        },\r\n",
+					"        runtime_parameters={\"batch_data\": df},\r\n",
+					"    )"
 				],
 				"execution_count": null
 			}
