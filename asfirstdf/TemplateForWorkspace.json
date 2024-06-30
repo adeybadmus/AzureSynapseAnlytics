@@ -1806,7 +1806,7 @@
 						"spark.dynamicAllocation.enabled": "true",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "38991edb-0d71-4157-8b69-aa15b3ce7c50"
+						"spark.autotune.trackingId": "8e1de58e-e870-4575-99aa-803dfb274196"
 					}
 				},
 				"metadata": {
@@ -1851,7 +1851,7 @@
 							}
 						},
 						"source": [
-							"pip install pyspark"
+							"# pip install pyspark"
 						],
 						"outputs": [],
 						"execution_count": 88
@@ -1873,7 +1873,7 @@
 							"pip install great_expectations"
 						],
 						"outputs": [],
-						"execution_count": 82
+						"execution_count": null
 					},
 					{
 						"cell_type": "code",
@@ -1882,7 +1882,7 @@
 							"import great_expectations as ge"
 						],
 						"outputs": [],
-						"execution_count": 83
+						"execution_count": 7
 					},
 					{
 						"cell_type": "markdown",
@@ -1934,7 +1934,7 @@
 							"from great_expectations.data_context import EphemeralDataContext"
 						],
 						"outputs": [],
-						"execution_count": 84
+						"execution_count": 8
 					},
 					{
 						"cell_type": "markdown",
@@ -1970,7 +1970,7 @@
 							"ge_context.build_data_docs()"
 						],
 						"outputs": [],
-						"execution_count": 85
+						"execution_count": 9
 					},
 					{
 						"cell_type": "markdown",
@@ -2002,7 +2002,7 @@
 							"%run test/read_silver_data"
 						],
 						"outputs": [],
-						"execution_count": 87
+						"execution_count": null
 					},
 					{
 						"cell_type": "code",
@@ -2018,7 +2018,7 @@
 							}
 						},
 						"source": [
-							"def prepare_get_datasource(dname:str = 'DataFrame_Customer_Data_Connector') -> dict:\r\n",
+							"def prepare_get_datasource(dname:str = 'DataFrame_Customer_Source') -> dict:\r\n",
 							"    ge_dataframe_datasource = {\r\n",
 							"        \"name\" : dname,\r\n",
 							"        \"class_name\" : \"Datasource\",\r\n",
@@ -2045,7 +2045,7 @@
 							"    return ge_dataframe_datasource"
 						],
 						"outputs": [],
-						"execution_count": 75
+						"execution_count": 57
 					},
 					{
 						"cell_type": "code",
@@ -2067,10 +2067,49 @@
 							"#my_asset = ge_context.get_datasource(\"my_datasource\").get_asset(\"my_asset\")\r\n",
 							"\r\n",
 							"ge_context.add_datasource(**prepare_get_datasource())\r\n",
-							"print(ge_context)"
+							"#print(ge_context)"
 						],
 						"outputs": [],
-						"execution_count": 80
+						"execution_count": 62
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"# ge_context.delete_datasource('DataFrame_Customer_Data_Connector')"
+						],
+						"outputs": [],
+						"execution_count": 68
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"ge_context.get_available_data_asset_names()\r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 69
 					},
 					{
 						"cell_type": "markdown",
@@ -2112,7 +2151,7 @@
 							"    return batch_request"
 						],
 						"outputs": [],
-						"execution_count": 60
+						"execution_count": 58
 					},
 					{
 						"cell_type": "markdown",
@@ -2161,7 +2200,7 @@
 							"ge_context.list_expectation_suite_names()"
 						],
 						"outputs": [],
-						"execution_count": 61
+						"execution_count": 31
 					},
 					{
 						"cell_type": "code",
@@ -2281,7 +2320,65 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 59
+						"execution_count": 32
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"collapsed": false
+						},
+						"source": [
+							"display(customerSilverDF)"
+						],
+						"outputs": [],
+						"execution_count": 43
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"ge_context.get_available_data_asset_names()"
+						],
+						"outputs": [],
+						"execution_count": 63
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"#ge_context.delete_datasource('DataFrame_Customer_Data_Connector')"
+						],
+						"outputs": [],
+						"execution_count": 48
 					},
 					{
 						"cell_type": "code",
@@ -2298,22 +2395,54 @@
 						},
 						"source": [
 							"customers_batch_request = prepare_runtime_batch(customerSilverDF)\r\n",
-							"print(customers_batch_request)\r\n",
+							"#print(customers_batch_request)\r\n",
 							"validator = ge_context.get_validator(\r\n",
-							"    # datasource_name=customers_batch_request.datasource_name,\r\n",
-							"    # data_connector_name=customers_batch_request.data_connector_name, \r\n",
-							"    # data_asset_name=customers_batch_request.data_asset_name\r\n",
+							"    #datasource_name=customers_batch_request.datasource_name,\r\n",
+							"    #data_connector_name=customers_batch_request.data_connector_name, \r\n",
+							"    #data_asset_name=customers_batch_request.data_asset_name\r\n",
 							"    batch_request=customers_batch_request,\r\n",
 							"    expectation_suite_name='customers_suite'\r\n",
 							")\r\n",
 							"\r\n",
-							"# print(validator.head())\r\n",
+							"print(validator.head())\r\n",
 							"\r\n",
 							"\r\n",
 							"   "
 						],
 						"outputs": [],
-						"execution_count": 63
+						"execution_count": 71
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"# 7. Prepare and Run Checkpoint"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							""
+						],
+						"outputs": [],
+						"execution_count": null
 					}
 				]
 			},
@@ -2343,7 +2472,7 @@
 						"spark.dynamicAllocation.enabled": "true",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "5440a929-7329-4adc-b87c-e45e12fa5caa"
+						"spark.autotune.trackingId": "86f98034-9eec-4973-adb6-b86999970fdd"
 					}
 				},
 				"metadata": {
@@ -2421,7 +2550,7 @@
 							}
 						},
 						"source": [
-							"spark.sparkContext.stop()"
+							"# spark.sparkContext.stop()"
 						],
 						"outputs": [],
 						"execution_count": null
@@ -2454,7 +2583,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "bafc978c-588f-49c7-808a-ae2cea43b1ff"
+						"spark.autotune.trackingId": "088cb272-9b74-49ec-9311-399895ed255b"
 					}
 				},
 				"metadata": {
@@ -2628,10 +2757,10 @@
 							"customerSilverDF = (spark.read.load(customer_silver_path, format='delta'))\r\n",
 							"\r\n",
 							"customerSilverDF.createOrReplaceTempView(\"silverCustomerTable\")\r\n",
-							""
+							"display(customerSilverDF)"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 2
 					}
 				]
 			},
