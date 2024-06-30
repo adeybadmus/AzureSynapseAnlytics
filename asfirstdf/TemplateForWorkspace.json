@@ -1806,7 +1806,7 @@
 						"spark.dynamicAllocation.enabled": "false",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "8bf312ed-9c8a-42c5-9b07-6342f87818f5"
+						"spark.autotune.trackingId": "7570d8b0-70fa-4c71-9168-b26048d7982e"
 					}
 				},
 				"metadata": {
@@ -1853,7 +1853,7 @@
 							"pip install great_expectations"
 						],
 						"outputs": [],
-						"execution_count": 6
+						"execution_count": null
 					},
 					{
 						"cell_type": "code",
@@ -1861,7 +1861,7 @@
 							"import great_expectations as ge"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 3
 					},
 					{
 						"cell_type": "markdown",
@@ -1913,7 +1913,7 @@
 							"from great_expectations.data_context import EphemeralDataContext"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 4
 					},
 					{
 						"cell_type": "markdown",
@@ -1949,7 +1949,7 @@
 							"ge_context.build_data_docs()"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 5
 					},
 					{
 						"cell_type": "markdown",
@@ -1981,7 +1981,7 @@
 							"%run read_bronze_data"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 6
 					},
 					{
 						"cell_type": "code",
@@ -2045,6 +2045,47 @@
 						],
 						"outputs": [],
 						"execution_count": null
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"# Create a Validator"
+						]
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"def prepare_runtime_batch(df:DataFrame):\r\n",
+							"    batch_request = RuntimeBatchRequest(\r\n",
+							"        datasource_name=\"DataFrame_Tenants_Source\",\r\n",
+							"        data_connector_name=\"DataFrame_Tenant_Data_Connector\",\r\n",
+							"        data_asset_name=\"tenant_data_batch\",\r\n",
+							"        batch_identifiers={\r\n",
+							"            \"tenants_source\": \"tenants_spurce\",\r\n",
+							"        },\r\n",
+							"        runtime_parameters={\"batch_data\": df},\r\n",
+							"    )"
+						],
+						"outputs": [],
+						"execution_count": null
 					}
 				]
 			},
@@ -2074,7 +2115,7 @@
 						"spark.dynamicAllocation.enabled": "true",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "a35c8d80-e045-4609-928c-ddb5c3faec62"
+						"spark.autotune.trackingId": "a55e1216-59e3-49bc-b307-5f867b0c8d99"
 					}
 				},
 				"metadata": {
@@ -2113,65 +2154,6 @@
 						],
 						"outputs": [],
 						"execution_count": 2
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							"from pyspark.sql import SparkSession\r\n",
-							"from sedona.spark import *\r\n",
-							"from notebookutils import mssparkutils"
-						],
-						"outputs": [],
-						"execution_count": null
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							"sedona = SedonaContext.create(spark)"
-						],
-						"outputs": [],
-						"execution_count": null
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							"%run helpers/dp_common_executions"
-						],
-						"outputs": [],
-						"execution_count": null
 					},
 					{
 						"cell_type": "code",
