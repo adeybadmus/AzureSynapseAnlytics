@@ -32,6 +32,15 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('workspaceName'), '/spareSparkPool')]",
+			"type": "Microsoft.Synapse/workspaces/bigDataPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/create_sales_view')]",
 			"type": "Microsoft.Synapse/workspaces/pipelines",
 			"apiVersion": "2019-06-01-preview",
@@ -1803,10 +1812,10 @@
 					"executorCores": 4,
 					"numExecutors": 2,
 					"conf": {
-						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.enabled": "true",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "2a11756f-96d9-45e5-bf43-f8fcbbb2c490"
+						"spark.autotune.trackingId": "14723e52-0e76-48c8-9bef-2aae1ec270df"
 					}
 				},
 				"metadata": {
@@ -1831,8 +1840,7 @@
 						"sparkVersion": "3.4",
 						"nodeCount": 10,
 						"cores": 4,
-						"memory": 28,
-						"automaticScaleJobs": false
+						"memory": 28
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -1851,19 +1859,37 @@
 							}
 						},
 						"source": [
-							"pip install great_expectations"
+							"pip install pyspark"
 						],
 						"outputs": [],
-						"execution_count": 21
+						"execution_count": 81
 					},
 					{
 						"cell_type": "code",
-						"metadata": {},
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"pip install great_expectations"
+						],
+						"outputs": [],
+						"execution_count": 82
+					},
+					{
+						"cell_type": "code",
 						"source": [
 							"import great_expectations as ge"
 						],
 						"outputs": [],
-						"execution_count": 18
+						"execution_count": 83
 					},
 					{
 						"cell_type": "markdown",
@@ -1915,7 +1941,7 @@
 							"from great_expectations.data_context import EphemeralDataContext"
 						],
 						"outputs": [],
-						"execution_count": 9
+						"execution_count": 84
 					},
 					{
 						"cell_type": "markdown",
@@ -1951,7 +1977,7 @@
 							"ge_context.build_data_docs()"
 						],
 						"outputs": [],
-						"execution_count": 10
+						"execution_count": 85
 					},
 					{
 						"cell_type": "markdown",
@@ -1980,10 +2006,10 @@
 							}
 						},
 						"source": [
-							"%run read_bronze_data"
+							"%run test/read_silver_data"
 						],
 						"outputs": [],
-						"execution_count": 11
+						"execution_count": 87
 					},
 					{
 						"cell_type": "code",
@@ -1999,14 +2025,14 @@
 							}
 						},
 						"source": [
-							"def prepare_get_datasource(dname:str = 'DataFrame_Tenant_Source') -> dict:\r\n",
+							"def prepare_get_datasource(dname:str = 'DataFrame_Customer_Data_Connector') -> dict:\r\n",
 							"    ge_dataframe_datasource = {\r\n",
 							"        \"name\" : dname,\r\n",
 							"        \"class_name\" : \"Datasource\",\r\n",
-							"        \"execution_engine\" : {\"class_name\": \"SparkDFExecutionEngine\", \"module_name\": \"great_expectation_engine\",},\r\n",
+							"        \"execution_engine\" : {\"class_name\": \"SparkDFExecutionEngine\", \"module_name\": \"great_expectations.execution_engine\",},\r\n",
 							"        \"data_connectors\" : {\r\n",
-							"            \"DataFrame_Tenant_Data_Connector\":{\r\n",
-							"            \"module_name\": \"great_expectatations.datasource.data_connector\",\r\n",
+							"            \"DataFrame_Customer_Data_Connector\":{\r\n",
+							"            \"module_name\": \"great_expectations.datasource.data_connector\",\r\n",
 							"            \"class_name\": \"RuntimeDataConnector\",\r\n",
 							"            \"batch_spec_passthrough\": {\r\n",
 							"                \"reader_method\": \"delta\",\r\n",
@@ -2015,8 +2041,8 @@
 							"                    \"inferSchema\": True,\r\n",
 							"                },\r\n",
 							"            },\r\n",
-							"            \"batch_identifienrs\": {\r\n",
-							"                \"tenantrs_source\"\r\n",
+							"            \"batch_identifiers\": {\r\n",
+							"                \"customers_source\"\r\n",
 							"            },\r\n",
 							"\r\n",
 							"            }\r\n",
@@ -2026,7 +2052,7 @@
 							"    return ge_dataframe_datasource"
 						],
 						"outputs": [],
-						"execution_count": 13
+						"execution_count": 75
 					},
 					{
 						"cell_type": "code",
@@ -2043,10 +2069,15 @@
 						},
 						"source": [
 							"# Prepare DataFrame for Data Source Connector to GE\r\n",
-							"ge_context.add_datasource(**prepare_get_datasource())"
+							"#ge_context.add_datasource(**prepare_get_datasource())\r\n",
+							"#my_asset = ge_context.get_datasource(\"my_datasource\").get_asset(\"my_asset\")\r\n",
+							"#my_asset = ge_context.get_datasource(\"my_datasource\").get_asset(\"my_asset\")\r\n",
+							"\r\n",
+							"ge_context.add_datasource(**prepare_get_datasource())\r\n",
+							"print(ge_context)"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 80
 					},
 					{
 						"cell_type": "markdown",
@@ -2077,17 +2108,35 @@
 						"source": [
 							"def prepare_runtime_batch(df:DataFrame):\r\n",
 							"    batch_request = RuntimeBatchRequest(\r\n",
-							"        datasource_name=\"DataFrame_Tenants_Source\",\r\n",
-							"        data_connector_name=\"DataFrame_Tenant_Data_Connector\",\r\n",
-							"        data_asset_name=\"tenant_data_batch\",\r\n",
+							"        datasource_name=\"DataFrame_Customer_Source\",\r\n",
+							"        data_connector_name=\"DataFrame_Customer_Data_Connector\",\r\n",
+							"        data_asset_name=\"customer_data_batch\",\r\n",
 							"        batch_identifiers={\r\n",
-							"            \"tenants_source\": \"tenants_spurce\",\r\n",
+							"            \"customers_source\": \"customers_source\",\r\n",
 							"        },\r\n",
 							"        runtime_parameters={\"batch_data\": df},\r\n",
-							"    )"
+							"    )\r\n",
+							"    return batch_request"
 						],
 						"outputs": [],
-						"execution_count": 15
+						"execution_count": 60
+					},
+					{
+						"cell_type": "markdown",
+						"metadata": {
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"validator = ge_context.get_validator(\r\n",
+							"    batch_request=prepare_runtime_batch(df),\r\n",
+							"    create_expectation_suite_with_name=\"version-0.15.50 tenant_suite\",\r\n",
+							")\r\n",
+							"print(validator.head())"
+						]
 					},
 					{
 						"cell_type": "markdown",
@@ -2116,10 +2165,162 @@
 							}
 						},
 						"source": [
-							"ge_context.list_expectations_suite_names()"
+							"ge_context.list_expectation_suite_names()"
 						],
 						"outputs": [],
-						"execution_count": 16
+						"execution_count": 61
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"#ge_context.delete_expectation_suite(\"cusomers_suite\")"
+						],
+						"outputs": [],
+						"execution_count": null
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"#add expectations suite to the data context\r\n",
+							"suite = ge_context.add_expectation_suite(expectation_suite_name=\"customers_suite\")"
+						],
+						"outputs": [],
+						"execution_count": 15
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"from great_expectations.core.expectation_configuration import ExpectationConfiguration\r\n",
+							"\r\n",
+							"# Create an Expectation\r\n",
+							"expectation_configuration_1 = ExpectationConfiguration(\r\n",
+							"   # Name of expectation type being added\r\n",
+							"   expectation_type=\"expect_table_columns_to_match_ordered_list\",\r\n",
+							"   # These are the arguments of the expectation\r\n",
+							"   # The keys allowed in the dictionary are Parameters and\r\n",
+							"   # Keyword Arguments of this Expectation Type\r\n",
+							"   kwargs={\r\n",
+							"      \"column_list\": [\r\n",
+							"         \"id\", \"FirstName\", \"LastName\", \"City\", \"Country\", \"Phone\"\r\n",
+							"      ]\r\n",
+							"   },\r\n",
+							"   # This is how you can optionally add a comment about this expectation.\r\n",
+							"   # It will be rendered in Data Docs.\r\n",
+							"   # See this guide for details:\r\n",
+							"   # `How to add comments to Expectations and display them in Data Docs`.\r\n",
+							"   meta={\r\n",
+							"      \"notes\": {\r\n",
+							"         \"format\": \"markdown\",\r\n",
+							"         \"content\": \"Some clever comment about this expectation. **Markdown** `Supported`\"\r\n",
+							"      }\r\n",
+							"   },\r\n",
+							")\r\n",
+							"\r\n",
+							"# Create another Expectation\r\n",
+							"expectation_configuration_2 = ExpectationConfiguration( \r\n",
+							"   expectation_type=\"expect_table_row_count_to_equal\",\r\n",
+							"   kwargs={\r\n",
+							"      'domain': 'table', \r\n",
+							"      'value' : 800\r\n",
+							"   },\r\n",
+							"   meta={\r\n",
+							"      \"notes\": {\r\n",
+							"         \"format\": \"markdown\",\r\n",
+							"         \"content\": \"Some clever comment about this expectation. **Markdown** `Supported`\",\r\n",
+							"      }\r\n",
+							"   },\r\n",
+							")\r\n",
+							"\r\n",
+							"# Create another Expectation\r\n",
+							"expectation_configuration_3 = ExpectationConfiguration( \r\n",
+							"   expectation_type=\"expect_column_values_to_not_be_null\",\r\n",
+							"   kwargs={\r\n",
+							"    'column': 'Id',\r\n",
+							"      'domain': 'column', \r\n",
+							"\r\n",
+							"   },\r\n",
+							"   meta={\r\n",
+							"      \"notes\": {\r\n",
+							"         \"format\": \"markdown\",\r\n",
+							"         \"content\": \"Some clever comment about this expectation. **Markdown** `Supported`\",\r\n",
+							"      }\r\n",
+							"   },\r\n",
+							")\r\n",
+							"\r\n",
+							"# Add the Expectation to the suite\r\n",
+							"#suite.add_expectation(expectation_configuration=expectation_configuration_1)\r\n",
+							"#suite.add_expectation(expectation_configuration=expectation_configuration_2)\r\n",
+							"suite.add_expectation(expectation_configuration=expectation_configuration_3)\r\n",
+							"ge_context.add_or_update_expectation_suite(expectation_suite_name='customers_suite')\r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 59
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"customers_batch_request = prepare_runtime_batch(customerSilverDF)\r\n",
+							"print(customers_batch_request)\r\n",
+							"validator = ge_context.get_validator(\r\n",
+							"    # datasource_name=customers_batch_request.datasource_name,\r\n",
+							"    # data_connector_name=customers_batch_request.data_connector_name, \r\n",
+							"    # data_asset_name=customers_batch_request.data_asset_name\r\n",
+							"    batch_request=customers_batch_request,\r\n",
+							"    expectation_suite_name='customers_suite'\r\n",
+							")\r\n",
+							"\r\n",
+							"# print(validator.head())\r\n",
+							"\r\n",
+							"\r\n",
+							"   "
+						],
+						"outputs": [],
+						"execution_count": 63
 					}
 				]
 			},
@@ -2149,7 +2350,7 @@
 						"spark.dynamicAllocation.enabled": "true",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "c4b1c8dd-d483-456d-aecd-13ffe75423c1"
+						"spark.autotune.trackingId": "00a02bc3-9d12-45e3-ad05-fa522393e46a"
 					}
 				},
 				"metadata": {
@@ -2185,7 +2386,7 @@
 							"%run helpers/dp_common_executions"
 						],
 						"outputs": [],
-						"execution_count": 2
+						"execution_count": 12
 					},
 					{
 						"cell_type": "code",
@@ -2207,10 +2408,11 @@
 							"customerBronzeDF = (spark.read.load(customer_bronze_path, format='parquet'))\r\n",
 							"\r\n",
 							"customerBronzeDF.createOrReplaceTempView(\"bronzeCustomerTable\")\r\n",
+							"display(customerBronzeDF.count())\r\n",
 							""
 						],
 						"outputs": [],
-						"execution_count": 2
+						"execution_count": null
 					},
 					{
 						"cell_type": "code",
@@ -2226,7 +2428,7 @@
 							}
 						},
 						"source": [
-							""
+							"spark.sparkContext.stop()"
 						],
 						"outputs": [],
 						"execution_count": null
@@ -2259,7 +2461,7 @@
 						"spark.dynamicAllocation.enabled": "true",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "30e4093b-4da6-40cd-8c49-b8edec83408f"
+						"spark.autotune.trackingId": "c0864436-a52d-4b61-82da-b82a3d33c7ec"
 					}
 				},
 				"metadata": {
@@ -2284,7 +2486,8 @@
 						"sparkVersion": "3.4",
 						"nodeCount": 10,
 						"cores": 4,
-						"memory": 28
+						"memory": 28,
+						"automaticScaleJobs": false
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -2306,7 +2509,7 @@
 							"pip install apache-sedona"
 						],
 						"outputs": [],
-						"execution_count": 12
+						"execution_count": null
 					},
 					{
 						"cell_type": "code",
@@ -2325,7 +2528,7 @@
 							"pip install keplergl"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 5
 					},
 					{
 						"cell_type": "code",
@@ -2344,7 +2547,7 @@
 							"pip install pydeck"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 6
 					},
 					{
 						"cell_type": "code",
@@ -2369,6 +2572,45 @@
 					},
 					{
 						"cell_type": "code",
+						"metadata": {},
+						"source": [
+							"%run helpers/dp_common_executions"
+						],
+						"outputs": [],
+						"execution_count": 8
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"sedona = SedonaContext.create"
+						],
+						"outputs": [],
+						"execution_count": 9
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
 						"source": [
 							"%run helpers/dp_common_executions"
 						],
@@ -2389,73 +2631,16 @@
 							}
 						},
 						"source": [
-							"sedona = SedonaContext.create"
-						],
-						"outputs": [],
-						"execution_count": 19
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							"%run helpers/dp_common_executions"
-						],
-						"outputs": [],
-						"execution_count": null
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
-							"%run helpers/"
-						],
-						"outputs": [],
-						"execution_count": null
-					},
-					{
-						"cell_type": "code",
-						"metadata": {
-							"jupyter": {
-								"source_hidden": false,
-								"outputs_hidden": false
-							},
-							"nteract": {
-								"transient": {
-									"deleting": false
-								}
-							}
-						},
-						"source": [
 							"# Customer Bronze DataFrame\r\n",
 							"customer_silver_path = f\"{mount_path_silver}\" + \"/\" + \"dbo/Customer\"\r\n",
 							"print(customer_silver_path)\r\n",
-							"customerBronzeDF = (spark.read.load(customer_silver_path, format='parquet'))\r\n",
+							"customerSilverDF = (spark.read.load(customer_silver_path, format='delta'))\r\n",
 							"\r\n",
-							"customerBronzeDF.createOrReplaceTempView(\"silverCustomerTable\")\r\n",
+							"customerSilverDF.createOrReplaceTempView(\"silverCustomerTable\")\r\n",
 							""
 						],
 						"outputs": [],
-						"execution_count": 20
+						"execution_count": 15
 					}
 				]
 			},
@@ -2630,6 +2815,31 @@
 				},
 				"nodeCount": 10,
 				"nodeSize": "Small",
+				"nodeSizeFamily": "MemoryOptimized",
+				"sparkVersion": "3.4",
+				"isComputeIsolationEnabled": false,
+				"sessionLevelPackagesEnabled": false,
+				"annotations": []
+			},
+			"dependsOn": [],
+			"location": "eastus"
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/spareSparkPool')]",
+			"type": "Microsoft.Synapse/workspaces/bigDataPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"autoPause": {
+					"enabled": true,
+					"delayInMinutes": 15
+				},
+				"autoScale": {
+					"enabled": true,
+					"maxNodeCount": 10,
+					"minNodeCount": 3
+				},
+				"nodeCount": 10,
+				"nodeSize": "Medium",
 				"nodeSizeFamily": "MemoryOptimized",
 				"sparkVersion": "3.4",
 				"isComputeIsolationEnabled": false,
