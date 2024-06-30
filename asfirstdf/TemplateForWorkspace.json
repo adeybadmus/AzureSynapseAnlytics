@@ -2448,20 +2448,20 @@
 				"nbformat": 4,
 				"nbformat_minor": 2,
 				"bigDataPool": {
-					"referenceName": "spareSparkPool",
+					"referenceName": "SynSalespool",
 					"type": "BigDataPoolReference"
 				},
 				"sessionProperties": {
-					"driverMemory": "56g",
-					"driverCores": 8,
-					"executorMemory": "56g",
-					"executorCores": 8,
-					"numExecutors": 1,
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2,
 					"conf": {
-						"spark.dynamicAllocation.enabled": "true",
-						"spark.dynamicAllocation.minExecutors": "1",
-						"spark.dynamicAllocation.maxExecutors": "4",
-						"spark.autotune.trackingId": "e70a63ec-b5c9-485d-991b-797e6aa87d31"
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "dd156cfc-de0f-46cc-9d7f-8bf2156f56a3"
 					}
 				},
 				"metadata": {
@@ -2475,10 +2475,10 @@
 						"name": "python"
 					},
 					"a365ComputeOptions": {
-						"id": "/subscriptions/bb83342a-f18f-4eb9-af01-297fab968e48/resourceGroups/firstdf/providers/Microsoft.Synapse/workspaces/asfirstdf/bigDataPools/spareSparkPool",
-						"name": "spareSparkPool",
+						"id": "/subscriptions/bb83342a-f18f-4eb9-af01-297fab968e48/resourceGroups/firstdf/providers/Microsoft.Synapse/workspaces/asfirstdf/bigDataPools/SynSalespool",
+						"name": "SynSalespool",
 						"type": "Spark",
-						"endpoint": "https://asfirstdf.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/spareSparkPool",
+						"endpoint": "https://asfirstdf.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/SynSalespool",
 						"auth": {
 							"type": "AAD",
 							"authResource": "https://dev.azuresynapse.net"
@@ -2508,7 +2508,7 @@
 							"pip install apache-sedona"
 						],
 						"outputs": [],
-						"execution_count": 3
+						"execution_count": 1
 					},
 					{
 						"cell_type": "code",
