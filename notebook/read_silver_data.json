@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "true",
 				"spark.dynamicAllocation.minExecutors": "1",
 				"spark.dynamicAllocation.maxExecutors": "4",
-				"spark.autotune.trackingId": "9ae5359b-dfb5-44c5-ac91-323ddf6e6fd6"
+				"spark.autotune.trackingId": "e70a63ec-b5c9-485d-991b-797e6aa87d31"
 			}
 		},
 		"metadata": {
@@ -67,7 +67,7 @@
 				"source": [
 					"pip install apache-sedona"
 				],
-				"execution_count": 1
+				"execution_count": 3
 			},
 			{
 				"cell_type": "code",
