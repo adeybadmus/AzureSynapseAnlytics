@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "true",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "c4b1c8dd-d483-456d-aecd-13ffe75423c1"
+				"spark.autotune.trackingId": "00a02bc3-9d12-45e3-ad05-fa522393e46a"
 			}
 		},
 		"metadata": {
@@ -56,7 +56,7 @@
 				"source": [
 					"%run helpers/dp_common_executions"
 				],
-				"execution_count": 2
+				"execution_count": 12
 			},
 			{
 				"cell_type": "code",
@@ -78,9 +78,10 @@
 					"customerBronzeDF = (spark.read.load(customer_bronze_path, format='parquet'))\r\n",
 					"\r\n",
 					"customerBronzeDF.createOrReplaceTempView(\"bronzeCustomerTable\")\r\n",
+					"display(customerBronzeDF.count())\r\n",
 					""
 				],
-				"execution_count": 2
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -96,7 +97,7 @@
 					}
 				},
 				"source": [
-					""
+					"spark.sparkContext.stop()"
 				],
 				"execution_count": null
 			}

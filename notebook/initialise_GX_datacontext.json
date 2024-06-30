@@ -17,10 +17,10 @@
 			"executorCores": 4,
 			"numExecutors": 2,
 			"conf": {
-				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.enabled": "true",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "cc0d9d9e-fa73-41f4-b7a9-58321e9f6277"
+				"spark.autotune.trackingId": "14723e52-0e76-48c8-9bef-2aae1ec270df"
 			}
 		},
 		"metadata": {
@@ -65,16 +65,34 @@
 					}
 				},
 				"source": [
+					"pip install pyspark"
+				],
+				"execution_count": 81
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
 					"pip install great_expectations"
 				],
-				"execution_count": 21
+				"execution_count": 82
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"import great_expectations as ge"
 				],
-				"execution_count": 18
+				"execution_count": 83
 			},
 			{
 				"cell_type": "markdown",
@@ -125,7 +143,7 @@
 					")\r\n",
 					"from great_expectations.data_context import EphemeralDataContext"
 				],
-				"execution_count": 9
+				"execution_count": 84
 			},
 			{
 				"cell_type": "markdown",
@@ -160,7 +178,7 @@
 					"ge_context = EphemeralDataContext(project_config=project_config)\r\n",
 					"ge_context.build_data_docs()"
 				],
-				"execution_count": 10
+				"execution_count": 85
 			},
 			{
 				"cell_type": "markdown",
@@ -189,9 +207,9 @@
 					}
 				},
 				"source": [
-					"%run read_bronze_data"
+					"%run test/read_silver_data"
 				],
-				"execution_count": 11
+				"execution_count": 87
 			},
 			{
 				"cell_type": "code",
@@ -207,14 +225,14 @@
 					}
 				},
 				"source": [
-					"def prepare_get_datasource(dname:str = 'DataFrame_Tenant_Source') -> dict:\r\n",
+					"def prepare_get_datasource(dname:str = 'DataFrame_Customer_Data_Connector') -> dict:\r\n",
 					"    ge_dataframe_datasource = {\r\n",
 					"        \"name\" : dname,\r\n",
 					"        \"class_name\" : \"Datasource\",\r\n",
-					"        \"execution_engine\" : {\"class_name\": \"SparkDFExecutionEngine\", \"module_name\": \"great_expectation_engine\",},\r\n",
+					"        \"execution_engine\" : {\"class_name\": \"SparkDFExecutionEngine\", \"module_name\": \"great_expectations.execution_engine\",},\r\n",
 					"        \"data_connectors\" : {\r\n",
-					"            \"DataFrame_Tenant_Data_Connector\":{\r\n",
-					"            \"module_name\": \"great_expectatations.datasource.data_connector\",\r\n",
+					"            \"DataFrame_Customer_Data_Connector\":{\r\n",
+					"            \"module_name\": \"great_expectations.datasource.data_connector\",\r\n",
 					"            \"class_name\": \"RuntimeDataConnector\",\r\n",
 					"            \"batch_spec_passthrough\": {\r\n",
 					"                \"reader_method\": \"delta\",\r\n",
@@ -223,8 +241,8 @@
 					"                    \"inferSchema\": True,\r\n",
 					"                },\r\n",
 					"            },\r\n",
-					"            \"batch_identifienrs\": {\r\n",
-					"                \"tenantrs_source\"\r\n",
+					"            \"batch_identifiers\": {\r\n",
+					"                \"customers_source\"\r\n",
 					"            },\r\n",
 					"\r\n",
 					"            }\r\n",
@@ -233,7 +251,7 @@
 					"    }\r\n",
 					"    return ge_dataframe_datasource"
 				],
-				"execution_count": 13
+				"execution_count": 75
 			},
 			{
 				"cell_type": "code",
@@ -250,9 +268,14 @@
 				},
 				"source": [
 					"# Prepare DataFrame for Data Source Connector to GE\r\n",
-					"ge_context.add_datasource(**prepare_get_datasource())"
+					"#ge_context.add_datasource(**prepare_get_datasource())\r\n",
+					"#my_asset = ge_context.get_datasource(\"my_datasource\").get_asset(\"my_asset\")\r\n",
+					"#my_asset = ge_context.get_datasource(\"my_datasource\").get_asset(\"my_asset\")\r\n",
+					"\r\n",
+					"ge_context.add_datasource(**prepare_get_datasource())\r\n",
+					"print(ge_context)"
 				],
-				"execution_count": null
+				"execution_count": 80
 			},
 			{
 				"cell_type": "markdown",
@@ -283,16 +306,34 @@
 				"source": [
 					"def prepare_runtime_batch(df:DataFrame):\r\n",
 					"    batch_request = RuntimeBatchRequest(\r\n",
-					"        datasource_name=\"DataFrame_Tenants_Source\",\r\n",
-					"        data_connector_name=\"DataFrame_Tenant_Data_Connector\",\r\n",
-					"        data_asset_name=\"tenant_data_batch\",\r\n",
+					"        datasource_name=\"DataFrame_Customer_Source\",\r\n",
+					"        data_connector_name=\"DataFrame_Customer_Data_Connector\",\r\n",
+					"        data_asset_name=\"customer_data_batch\",\r\n",
 					"        batch_identifiers={\r\n",
-					"            \"tenants_source\": \"tenants_spurce\",\r\n",
+					"            \"customers_source\": \"customers_source\",\r\n",
 					"        },\r\n",
 					"        runtime_parameters={\"batch_data\": df},\r\n",
-					"    )"
+					"    )\r\n",
+					"    return batch_request"
 				],
-				"execution_count": 15
+				"execution_count": 60
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"validator = ge_context.get_validator(\r\n",
+					"    batch_request=prepare_runtime_batch(df),\r\n",
+					"    create_expectation_suite_with_name=\"version-0.15.50 tenant_suite\",\r\n",
+					")\r\n",
+					"print(validator.head())"
+				]
 			},
 			{
 				"cell_type": "markdown",
@@ -321,9 +362,157 @@
 					}
 				},
 				"source": [
-					"ge_context.list_expectations_suite_names()"
+					"ge_context.list_expectation_suite_names()"
 				],
-				"execution_count": 16
+				"execution_count": 61
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"#ge_context.delete_expectation_suite(\"cusomers_suite\")"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"#add expectations suite to the data context\r\n",
+					"suite = ge_context.add_expectation_suite(expectation_suite_name=\"customers_suite\")"
+				],
+				"execution_count": 15
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from great_expectations.core.expectation_configuration import ExpectationConfiguration\r\n",
+					"\r\n",
+					"# Create an Expectation\r\n",
+					"expectation_configuration_1 = ExpectationConfiguration(\r\n",
+					"   # Name of expectation type being added\r\n",
+					"   expectation_type=\"expect_table_columns_to_match_ordered_list\",\r\n",
+					"   # These are the arguments of the expectation\r\n",
+					"   # The keys allowed in the dictionary are Parameters and\r\n",
+					"   # Keyword Arguments of this Expectation Type\r\n",
+					"   kwargs={\r\n",
+					"      \"column_list\": [\r\n",
+					"         \"id\", \"FirstName\", \"LastName\", \"City\", \"Country\", \"Phone\"\r\n",
+					"      ]\r\n",
+					"   },\r\n",
+					"   # This is how you can optionally add a comment about this expectation.\r\n",
+					"   # It will be rendered in Data Docs.\r\n",
+					"   # See this guide for details:\r\n",
+					"   # `How to add comments to Expectations and display them in Data Docs`.\r\n",
+					"   meta={\r\n",
+					"      \"notes\": {\r\n",
+					"         \"format\": \"markdown\",\r\n",
+					"         \"content\": \"Some clever comment about this expectation. **Markdown** `Supported`\"\r\n",
+					"      }\r\n",
+					"   },\r\n",
+					")\r\n",
+					"\r\n",
+					"# Create another Expectation\r\n",
+					"expectation_configuration_2 = ExpectationConfiguration( \r\n",
+					"   expectation_type=\"expect_table_row_count_to_equal\",\r\n",
+					"   kwargs={\r\n",
+					"      'domain': 'table', \r\n",
+					"      'value' : 800\r\n",
+					"   },\r\n",
+					"   meta={\r\n",
+					"      \"notes\": {\r\n",
+					"         \"format\": \"markdown\",\r\n",
+					"         \"content\": \"Some clever comment about this expectation. **Markdown** `Supported`\",\r\n",
+					"      }\r\n",
+					"   },\r\n",
+					")\r\n",
+					"\r\n",
+					"# Create another Expectation\r\n",
+					"expectation_configuration_3 = ExpectationConfiguration( \r\n",
+					"   expectation_type=\"expect_column_values_to_not_be_null\",\r\n",
+					"   kwargs={\r\n",
+					"    'column': 'Id',\r\n",
+					"      'domain': 'column', \r\n",
+					"\r\n",
+					"   },\r\n",
+					"   meta={\r\n",
+					"      \"notes\": {\r\n",
+					"         \"format\": \"markdown\",\r\n",
+					"         \"content\": \"Some clever comment about this expectation. **Markdown** `Supported`\",\r\n",
+					"      }\r\n",
+					"   },\r\n",
+					")\r\n",
+					"\r\n",
+					"# Add the Expectation to the suite\r\n",
+					"#suite.add_expectation(expectation_configuration=expectation_configuration_1)\r\n",
+					"#suite.add_expectation(expectation_configuration=expectation_configuration_2)\r\n",
+					"suite.add_expectation(expectation_configuration=expectation_configuration_3)\r\n",
+					"ge_context.add_or_update_expectation_suite(expectation_suite_name='customers_suite')\r\n",
+					""
+				],
+				"execution_count": 59
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"customers_batch_request = prepare_runtime_batch(customerSilverDF)\r\n",
+					"print(customers_batch_request)\r\n",
+					"validator = ge_context.get_validator(\r\n",
+					"    # datasource_name=customers_batch_request.datasource_name,\r\n",
+					"    # data_connector_name=customers_batch_request.data_connector_name, \r\n",
+					"    # data_asset_name=customers_batch_request.data_asset_name\r\n",
+					"    batch_request=customers_batch_request,\r\n",
+					"    expectation_suite_name='customers_suite'\r\n",
+					")\r\n",
+					"\r\n",
+					"# print(validator.head())\r\n",
+					"\r\n",
+					"\r\n",
+					"   "
+				],
+				"execution_count": 63
 			}
 		]
 	}
