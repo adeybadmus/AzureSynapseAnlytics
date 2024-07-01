@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "3a2f08fe-ea95-48ce-a31a-219ac4b769a4"
+				"spark.autotune.trackingId": "72e20342-64b7-4cbf-84ae-8f0039b7fc66"
 			}
 		},
 		"metadata": {
@@ -187,7 +187,7 @@
 					"print(customer_silver_path)\r\n",
 					"customerSilverDF = (spark.read.load(customer_silver_path, format='delta'))\r\n",
 					"\r\n",
-					"customerSilverDF.createOrReplaceTempView(\"customerSilverTable\")"
+					"customerSilverDF.createOrReplaceTempView(\"silverCustomerTable\")"
 				],
 				"execution_count": 2
 			}

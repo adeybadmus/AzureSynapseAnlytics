@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "8cbe7e78-aedf-4df4-ade0-e78dd8242978"
+				"spark.autotune.trackingId": "ba59dbc4-59e4-4e89-a45b-bd286bcce2da"
 			}
 		},
 		"metadata": {
@@ -112,7 +112,7 @@
 				"source": [
 					"%run test/read_silver_data"
 				],
-				"execution_count": 12
+				"execution_count": 15
 			},
 			{
 				"cell_type": "code",
@@ -130,7 +130,7 @@
 				"source": [
 					"validator = context.sources.pandas_default.read_dataframe(customerSilverDF.toPandas())"
 				],
-				"execution_count": 13
+				"execution_count": 16
 			},
 			{
 				"cell_type": "code",
@@ -152,7 +152,7 @@
 					"%%sql\r\n",
 					"select * from customerSilverTable"
 				],
-				"execution_count": 14
+				"execution_count": 18
 			},
 			{
 				"cell_type": "code",
