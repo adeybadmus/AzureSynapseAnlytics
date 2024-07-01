@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "true",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "a946a7ee-7f20-4b23-af06-f89a4970c41a"
+				"spark.autotune.trackingId": "0285f0e7-4825-4461-84d0-2b520e30acb7"
 			}
 		},
 		"metadata": {
@@ -67,7 +67,7 @@
 				"source": [
 					"# pip install pyspark"
 				],
-				"execution_count": 88
+				"execution_count": 91
 			},
 			{
 				"cell_type": "code",
@@ -85,14 +85,14 @@
 				"source": [
 					"pip install great_expectations"
 				],
-				"execution_count": null
+				"execution_count": 92
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"import great_expectations as ge"
 				],
-				"execution_count": 7
+				"execution_count": 93
 			},
 			{
 				"cell_type": "markdown",
@@ -143,7 +143,7 @@
 					")\r\n",
 					"from great_expectations.data_context import EphemeralDataContext"
 				],
-				"execution_count": 8
+				"execution_count": 94
 			},
 			{
 				"cell_type": "markdown",
@@ -178,7 +178,7 @@
 					"ge_context = EphemeralDataContext(project_config=project_config)\r\n",
 					"ge_context.build_data_docs()"
 				],
-				"execution_count": 9
+				"execution_count": 95
 			},
 			{
 				"cell_type": "markdown",
@@ -204,12 +204,13 @@
 						"transient": {
 							"deleting": false
 						}
-					}
+					},
+					"collapsed": false
 				},
 				"source": [
 					"%run test/read_silver_data"
 				],
-				"execution_count": null
+				"execution_count": 96
 			},
 			{
 				"cell_type": "code",
@@ -251,7 +252,7 @@
 					"    }\r\n",
 					"    return ge_dataframe_datasource"
 				],
-				"execution_count": 57
+				"execution_count": 97
 			},
 			{
 				"cell_type": "code",
@@ -275,7 +276,7 @@
 					"ge_context.add_datasource(**prepare_get_datasource())\r\n",
 					"#print(ge_context)"
 				],
-				"execution_count": 62
+				"execution_count": 98
 			},
 			{
 				"cell_type": "code",
@@ -293,7 +294,7 @@
 				"source": [
 					"# ge_context.delete_datasource('DataFrame_Customer_Data_Connector')"
 				],
-				"execution_count": 68
+				"execution_count": 99
 			},
 			{
 				"cell_type": "code",
@@ -312,7 +313,7 @@
 					"ge_context.get_available_data_asset_names()\r\n",
 					""
 				],
-				"execution_count": 69
+				"execution_count": 100
 			},
 			{
 				"cell_type": "markdown",
@@ -353,7 +354,7 @@
 					"    )\r\n",
 					"    return batch_request"
 				],
-				"execution_count": 58
+				"execution_count": 101
 			},
 			{
 				"cell_type": "markdown",
@@ -401,7 +402,7 @@
 				"source": [
 					"ge_context.list_expectation_suite_names()"
 				],
-				"execution_count": 31
+				"execution_count": 102
 			},
 			{
 				"cell_type": "code",
@@ -419,7 +420,7 @@
 				"source": [
 					"#ge_context.delete_expectation_suite(\"cusomers_suite\")"
 				],
-				"execution_count": null
+				"execution_count": 103
 			},
 			{
 				"cell_type": "code",
@@ -438,7 +439,7 @@
 					"#add expectations suite to the data context\r\n",
 					"suite = ge_context.add_expectation_suite(expectation_suite_name=\"customers_suite\")"
 				],
-				"execution_count": 15
+				"execution_count": 104
 			},
 			{
 				"cell_type": "code",
@@ -518,7 +519,7 @@
 					"ge_context.add_or_update_expectation_suite(expectation_suite_name='customers_suite')\r\n",
 					""
 				],
-				"execution_count": 32
+				"execution_count": 105
 			},
 			{
 				"cell_type": "code",
@@ -537,7 +538,7 @@
 				"source": [
 					"display(customerSilverDF)"
 				],
-				"execution_count": 43
+				"execution_count": 106
 			},
 			{
 				"cell_type": "code",
@@ -555,7 +556,7 @@
 				"source": [
 					"ge_context.get_available_data_asset_names()"
 				],
-				"execution_count": 63
+				"execution_count": 107
 			},
 			{
 				"cell_type": "code",
@@ -573,7 +574,7 @@
 				"source": [
 					"#ge_context.delete_datasource('DataFrame_Customer_Data_Connector')"
 				],
-				"execution_count": 48
+				"execution_count": 108
 			},
 			{
 				"cell_type": "code",
@@ -604,7 +605,7 @@
 					"\r\n",
 					"   "
 				],
-				"execution_count": 71
+				"execution_count": 109
 			},
 			{
 				"cell_type": "markdown",
@@ -634,11 +635,11 @@
 				},
 				"source": [
 					"def prepare_checkpoint() -> dict:\r\n",
-					"    ge_tenant_data_checkpoint = 'tenant_check'\r\n",
+					"    ge_customer_data_checkpoint = 'customer_check'\r\n",
 					"    checkpoint_config = {\r\n",
-					"        \"name\":ge_customer_data_checkpoint,\r\n",
+					"        \"name\": ge_customer_data_checkpoint,\r\n",
 					"        \"config_version\":1.0,\r\n",
-					"        \"class_name\":\"SimpleCheckpoimt\",\r\n",
+					"        \"class_name\":\"SimpleCheckpoint\",\r\n",
 					"        \"run_name_template\": \"%Y%m%d-%H%M%S-cutomer-run\",\r\n",
 					"        \"action_list\": [\r\n",
 					"            {\r\n",
@@ -663,7 +664,7 @@
 					"    }\r\n",
 					"    return checkpoint_config"
 				],
-				"execution_count": null
+				"execution_count": 110
 			},
 			{
 				"cell_type": "code",
@@ -690,6 +691,24 @@
 					"        ],\r\n",
 					"    )\r\n",
 					"    return checkpoint_result"
+				],
+				"execution_count": 111
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"#ge_context.get_checkpoint"
 				],
 				"execution_count": null
 			},
@@ -726,10 +745,10 @@
 				},
 				"source": [
 					"#Prepare Checkpoint\r\n",
-					"customer_check = prepare_checkpoint()\r\n",
-					"ge_context.add_checkpoint(**customer_check)"
+					"customers_check = prepare_checkpoint()\r\n",
+					"ge_context.add_checkpoint(**customers_check)"
 				],
-				"execution_count": null
+				"execution_count": 112
 			},
 			{
 				"cell_type": "code",
@@ -745,11 +764,148 @@
 					}
 				},
 				"source": [
-					"ge_context.list_expectation_suites()\r\n",
-					"ge_context = ge_contect.get_expectation_suite(\"customers_suite\")\r\n",
+					"ge_context.list_expectation_suite_names()\r\n",
+					"#ge_context.get_expectation_suite('customers_suite')\r\n",
+					"#ge_suite = ge_context.get_expectation_suite(\"customers_suite\")\r\n",
+					"#ge_suite.show_expectations_by_expectation_type()"
+				],
+				"execution_count": 88
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"ge_context.list_expectation_suite_names()\r\n",
+					"ge_suite = ge_context.get_expectation_suite('customers_suite')\r\n",
 					"ge_suite.show_expectations_by_expectation_type()"
 				],
-				"execution_count": null
+				"execution_count": 113
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"checkpoint_results = run_checkpoint(ge_context, customers_batch_request)\r\n",
+					"print(checkpoint_results)"
+				],
+				"execution_count": 114
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from great_expectations.data_context import EphemeralDataContext\r\n",
+					"\r\n",
+					"if isinstance(ge_context, EphemeralDataContext):\r\n",
+					"    print(\"It's Ephemeral!\")"
+				],
+				"execution_count": 115
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"ct = ge_context.convert_to_file_context()"
+				],
+				"execution_count": 116
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"ct_root_dir= ct.find_context_root_dir()\r\n",
+					"print(ct_root_dir)"
+				],
+				"execution_count": 117
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"prefix = \"file://\"\r\n",
+					"new_root_dir = prefix + ct_root_dir\r\n",
+					"print(new_root_dir)"
+				],
+				"execution_count": 119
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"mssparkutils.fs.cp(new_root_dir, \"abfss://gxtest@dlakefirstadf.dfs.core.windows.net\", True)\r\n",
+					""
+				],
+				"execution_count": 122
 			}
 		]
 	}
