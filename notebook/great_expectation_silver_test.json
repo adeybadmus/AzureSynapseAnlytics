@@ -1,5 +1,5 @@
 {
-	"name": "read_silver_data",
+	"name": "great_expectation_silver_test",
 	"properties": {
 		"folder": {
 			"name": "test"
@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "3a2f08fe-ea95-48ce-a31a-219ac4b769a4"
+				"spark.autotune.trackingId": "8cbe7e78-aedf-4df4-ade0-e78dd8242978"
 			}
 		},
 		"metadata": {
@@ -65,9 +65,17 @@
 					}
 				},
 				"source": [
-					"pip install apache-sedona"
+					"pip install great_expectations"
 				],
-				"execution_count": 1
+				"execution_count": 4
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"import great_expectations as gx\r\n",
+					"import pandas as pd"
+				],
+				"execution_count": 6
 			},
 			{
 				"cell_type": "code",
@@ -83,7 +91,84 @@
 					}
 				},
 				"source": [
-					"pip install keplergl"
+					"context = gx.get_context()"
+				],
+				"execution_count": 7
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%run test/read_silver_data"
+				],
+				"execution_count": 12
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"validator = context.sources.pandas_default.read_dataframe(customerSilverDF.toPandas())"
+				],
+				"execution_count": 13
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "sparksql"
+					}
+				},
+				"source": [
+					"%%sql\r\n",
+					"select * from customerSilverTable"
+				],
+				"execution_count": 14
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"validator.expect_column_values_to_be_null(\"\")"
 				],
 				"execution_count": null
 			},
@@ -101,95 +186,9 @@
 					}
 				},
 				"source": [
-					"pip install pydeck"
+					""
 				],
 				"execution_count": null
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"from pyspark.sql import SparkSession\r\n",
-					"from sedona.spark import *\r\n",
-					"from notebookutils import mssparkutils"
-				],
-				"execution_count": null
-			},
-			{
-				"cell_type": "code",
-				"source": [
-					"%run helpers/dp_common_executions"
-				],
-				"execution_count": null
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"sedona = SedonaContext.create"
-				],
-				"execution_count": null
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"%run helpers/dp_common_executions"
-				],
-				"execution_count": null
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"# Customer Bronze DataFrame\r\n",
-					"customer_silver_path = f\"{mount_path_silver}\" + \"/\" + \"dbo/Customer\"\r\n",
-					"print(customer_silver_path)\r\n",
-					"customerSilverDF = (spark.read.load(customer_silver_path, format='delta'))\r\n",
-					"\r\n",
-					"customerSilverDF.createOrReplaceTempView(\"customerSilverTable\")"
-				],
-				"execution_count": 2
 			}
 		]
 	}
