@@ -1806,7 +1806,7 @@
 						"spark.dynamicAllocation.enabled": "true",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "8e1de58e-e870-4575-99aa-803dfb274196"
+						"spark.autotune.trackingId": "0285f0e7-4825-4461-84d0-2b520e30acb7"
 					}
 				},
 				"metadata": {
@@ -1831,8 +1831,7 @@
 						"sparkVersion": "3.4",
 						"nodeCount": 10,
 						"cores": 4,
-						"memory": 28,
-						"automaticScaleJobs": false
+						"memory": 28
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -1854,7 +1853,7 @@
 							"# pip install pyspark"
 						],
 						"outputs": [],
-						"execution_count": 88
+						"execution_count": 91
 					},
 					{
 						"cell_type": "code",
@@ -1873,16 +1872,15 @@
 							"pip install great_expectations"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 92
 					},
 					{
 						"cell_type": "code",
-						"metadata": {},
 						"source": [
 							"import great_expectations as ge"
 						],
 						"outputs": [],
-						"execution_count": 7
+						"execution_count": 93
 					},
 					{
 						"cell_type": "markdown",
@@ -1934,7 +1932,7 @@
 							"from great_expectations.data_context import EphemeralDataContext"
 						],
 						"outputs": [],
-						"execution_count": 8
+						"execution_count": 94
 					},
 					{
 						"cell_type": "markdown",
@@ -1970,7 +1968,7 @@
 							"ge_context.build_data_docs()"
 						],
 						"outputs": [],
-						"execution_count": 9
+						"execution_count": 95
 					},
 					{
 						"cell_type": "markdown",
@@ -1996,13 +1994,14 @@
 								"transient": {
 									"deleting": false
 								}
-							}
+							},
+							"collapsed": false
 						},
 						"source": [
 							"%run test/read_silver_data"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 96
 					},
 					{
 						"cell_type": "code",
@@ -2045,7 +2044,7 @@
 							"    return ge_dataframe_datasource"
 						],
 						"outputs": [],
-						"execution_count": 57
+						"execution_count": 97
 					},
 					{
 						"cell_type": "code",
@@ -2070,7 +2069,7 @@
 							"#print(ge_context)"
 						],
 						"outputs": [],
-						"execution_count": 62
+						"execution_count": 98
 					},
 					{
 						"cell_type": "code",
@@ -2089,7 +2088,7 @@
 							"# ge_context.delete_datasource('DataFrame_Customer_Data_Connector')"
 						],
 						"outputs": [],
-						"execution_count": 68
+						"execution_count": 99
 					},
 					{
 						"cell_type": "code",
@@ -2109,7 +2108,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 69
+						"execution_count": 100
 					},
 					{
 						"cell_type": "markdown",
@@ -2151,7 +2150,7 @@
 							"    return batch_request"
 						],
 						"outputs": [],
-						"execution_count": 58
+						"execution_count": 101
 					},
 					{
 						"cell_type": "markdown",
@@ -2200,7 +2199,7 @@
 							"ge_context.list_expectation_suite_names()"
 						],
 						"outputs": [],
-						"execution_count": 31
+						"execution_count": 102
 					},
 					{
 						"cell_type": "code",
@@ -2219,7 +2218,7 @@
 							"#ge_context.delete_expectation_suite(\"cusomers_suite\")"
 						],
 						"outputs": [],
-						"execution_count": null
+						"execution_count": 103
 					},
 					{
 						"cell_type": "code",
@@ -2239,7 +2238,7 @@
 							"suite = ge_context.add_expectation_suite(expectation_suite_name=\"customers_suite\")"
 						],
 						"outputs": [],
-						"execution_count": 15
+						"execution_count": 104
 					},
 					{
 						"cell_type": "code",
@@ -2320,7 +2319,7 @@
 							""
 						],
 						"outputs": [],
-						"execution_count": 32
+						"execution_count": 105
 					},
 					{
 						"cell_type": "code",
@@ -2340,7 +2339,7 @@
 							"display(customerSilverDF)"
 						],
 						"outputs": [],
-						"execution_count": 43
+						"execution_count": 106
 					},
 					{
 						"cell_type": "code",
@@ -2359,7 +2358,7 @@
 							"ge_context.get_available_data_asset_names()"
 						],
 						"outputs": [],
-						"execution_count": 63
+						"execution_count": 107
 					},
 					{
 						"cell_type": "code",
@@ -2378,7 +2377,7 @@
 							"#ge_context.delete_datasource('DataFrame_Customer_Data_Connector')"
 						],
 						"outputs": [],
-						"execution_count": 48
+						"execution_count": 108
 					},
 					{
 						"cell_type": "code",
@@ -2410,7 +2409,7 @@
 							"   "
 						],
 						"outputs": [],
-						"execution_count": 71
+						"execution_count": 109
 					},
 					{
 						"cell_type": "markdown",
@@ -2439,10 +2438,291 @@
 							}
 						},
 						"source": [
-							""
+							"def prepare_checkpoint() -> dict:\r\n",
+							"    ge_customer_data_checkpoint = 'customer_check'\r\n",
+							"    checkpoint_config = {\r\n",
+							"        \"name\": ge_customer_data_checkpoint,\r\n",
+							"        \"config_version\":1.0,\r\n",
+							"        \"class_name\":\"SimpleCheckpoint\",\r\n",
+							"        \"run_name_template\": \"%Y%m%d-%H%M%S-cutomer-run\",\r\n",
+							"        \"action_list\": [\r\n",
+							"            {\r\n",
+							"                \"name\": \"store_validation_result\",\r\n",
+							"                \"action\": {\r\n",
+							"                    \"class_name\": \"StoreValidationResultAction\",\r\n",
+							"                },\r\n",
+							"            },\r\n",
+							"            {\r\n",
+							"                \"name\": \"store_evaluation_params\",\r\n",
+							"                \"action\": {\r\n",
+							"                    \"class_name\": \"StoreEvaluationParametersAction\",\r\n",
+							"                    },\r\n",
+							"            },\r\n",
+							"            {\r\n",
+							"                \"name\": \"update_data_docss\",\r\n",
+							"                \"action\": {\r\n",
+							"                    \"class_name\": \"UpdateDataDocsAction\",\r\n",
+							"                },\r\n",
+							"            },\r\n",
+							"        ],\r\n",
+							"    }\r\n",
+							"    return checkpoint_config"
+						],
+						"outputs": [],
+						"execution_count": 110
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"def run_checkpoint(context, batch_request):\r\n",
+							"    checkpoint_result = context.run_checkpoint(\r\n",
+							"        checkpoint_name=\"customer_check\",\r\n",
+							"        validations=[\r\n",
+							"            {\r\n",
+							"                \"batch_request\": batch_request,\r\n",
+							"                \"expectation_suite_name\": \"customers_suite\",\r\n",
+							"            }\r\n",
+							"        ],\r\n",
+							"    )\r\n",
+							"    return checkpoint_result"
+						],
+						"outputs": [],
+						"execution_count": 111
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"#ge_context.get_checkpoint"
 						],
 						"outputs": [],
 						"execution_count": null
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"#ge_contect.delet_checkpoint(\"customer_check\")"
+						],
+						"outputs": [],
+						"execution_count": null
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"#Prepare Checkpoint\r\n",
+							"customers_check = prepare_checkpoint()\r\n",
+							"ge_context.add_checkpoint(**customers_check)"
+						],
+						"outputs": [],
+						"execution_count": 112
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"ge_context.list_expectation_suite_names()\r\n",
+							"#ge_context.get_expectation_suite('customers_suite')\r\n",
+							"#ge_suite = ge_context.get_expectation_suite(\"customers_suite\")\r\n",
+							"#ge_suite.show_expectations_by_expectation_type()"
+						],
+						"outputs": [],
+						"execution_count": 88
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"ge_context.list_expectation_suite_names()\r\n",
+							"ge_suite = ge_context.get_expectation_suite('customers_suite')\r\n",
+							"ge_suite.show_expectations_by_expectation_type()"
+						],
+						"outputs": [],
+						"execution_count": 113
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"checkpoint_results = run_checkpoint(ge_context, customers_batch_request)\r\n",
+							"print(checkpoint_results)"
+						],
+						"outputs": [],
+						"execution_count": 114
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"from great_expectations.data_context import EphemeralDataContext\r\n",
+							"\r\n",
+							"if isinstance(ge_context, EphemeralDataContext):\r\n",
+							"    print(\"It's Ephemeral!\")"
+						],
+						"outputs": [],
+						"execution_count": 115
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"ct = ge_context.convert_to_file_context()"
+						],
+						"outputs": [],
+						"execution_count": 116
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"ct_root_dir= ct.find_context_root_dir()\r\n",
+							"print(ct_root_dir)"
+						],
+						"outputs": [],
+						"execution_count": 117
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"prefix = \"file://\"\r\n",
+							"new_root_dir = prefix + ct_root_dir\r\n",
+							"print(new_root_dir)"
+						],
+						"outputs": [],
+						"execution_count": 119
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"mssparkutils.fs.cp(new_root_dir, \"abfss://gxtest@dlakefirstadf.dfs.core.windows.net\", True)\r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 122
 					}
 				]
 			},
