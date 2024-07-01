@@ -1806,7 +1806,7 @@
 						"spark.dynamicAllocation.enabled": "true",
 						"spark.dynamicAllocation.minExecutors": "2",
 						"spark.dynamicAllocation.maxExecutors": "2",
-						"spark.autotune.trackingId": "0285f0e7-4825-4461-84d0-2b520e30acb7"
+						"spark.autotune.trackingId": "8fa39ef2-6a63-4f1a-bfc6-72ae1d539699"
 					}
 				},
 				"metadata": {
@@ -1831,7 +1831,8 @@
 						"sparkVersion": "3.4",
 						"nodeCount": 10,
 						"cores": 4,
-						"memory": 28
+						"memory": 28,
+						"automaticScaleJobs": false
 					},
 					"sessionKeepAliveTimeout": 30
 				},
@@ -1876,6 +1877,7 @@
 					},
 					{
 						"cell_type": "code",
+						"metadata": {},
 						"source": [
 							"import great_expectations as ge"
 						],
