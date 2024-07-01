@@ -1,0 +1,912 @@
+{
+	"name": "initialise_GX_datacontext",
+	"properties": {
+		"folder": {
+			"name": "test"
+		},
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "SynSalespool",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "true",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "2dad1d15-0527-419d-84b8-23c65935294a"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/bb83342a-f18f-4eb9-af01-297fab968e48/resourceGroups/firstdf/providers/Microsoft.Synapse/workspaces/asfirstdf/bigDataPools/SynSalespool",
+				"name": "SynSalespool",
+				"type": "Spark",
+				"endpoint": "https://asfirstdf.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/SynSalespool",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.4",
+				"nodeCount": 10,
+				"cores": 4,
+				"memory": 28,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# pip install pyspark"
+				],
+				"execution_count": 26
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"pip install great_expectations"
+				],
+				"execution_count": 27
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"import great_expectations as ge"
+				],
+				"execution_count": 28
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Import required Libraries"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from ruamel import yaml\r\n",
+					"import datetime\r\n",
+					"import os\r\n",
+					"from pyspark.sql import SparkSession, DataFrame\r\n",
+					"\r\n",
+					"\r\n",
+					"from great_expectations.core.batch import RuntimeBatchRequest\r\n",
+					"from great_expectations.profile.user_configurable_profiler import UserConfigurableProfiler\r\n",
+					"from great_expectations.profile.basic_dataset_profiler import BasicDatasetProfiler\r\n",
+					"from great_expectations.dataset.sparkdf_dataset import SparkDFDataset\r\n",
+					"from great_expectations.render.renderer import *\r\n",
+					"from great_expectations.render.view import DefaultJinjaPageView\r\n",
+					"from great_expectations.data_context.types.base import DataContextConfig, DatasourceConfig, FilesystemStoreBackendDefaults\r\n",
+					"from pyspark.sql.types import StructType, StructField, IntegerType, LongType, TimestampType, DoubleType, BooleanType, NullType, DecimalType, FloatType, ShortType\r\n",
+					"from great_expectations.data_context.types.resource_identifiers import ValidationResultIdentifier\r\n",
+					"from datetime import datetime\r\n",
+					"from great_expectations.data_context.types.base import(\r\n",
+					"    DataContextConfig,\r\n",
+					"    InMemoryStoreBackendDefaults\r\n",
+					")\r\n",
+					"from great_expectations.data_context import EphemeralDataContext"
+				],
+				"execution_count": 29
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# 2. Create Data Context"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"project_config = DataContextConfig(\r\n",
+					"    store_backend_defaults=InMemoryStoreBackendDefaults()\r\n",
+					")\r\n",
+					"ge_context = EphemeralDataContext(project_config=project_config)\r\n",
+					"ge_context.build_data_docs()"
+				],
+				"execution_count": 30
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Connect to Data"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%run test/read_silver_data"
+				],
+				"execution_count": 31
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"def prepare_get_datasource(dname:str = 'DataFrame_Customer_Source') -> dict:\r\n",
+					"    ge_dataframe_datasource = {\r\n",
+					"        \"name\" : dname,\r\n",
+					"        \"class_name\" : \"Datasource\",\r\n",
+					"        \"execution_engine\" : {\"class_name\": \"SparkDFExecutionEngine\", \"module_name\": \"great_expectations.execution_engine\",},\r\n",
+					"        \"data_connectors\" : {\r\n",
+					"            \"DataFrame_Customer_Data_Connector\":{\r\n",
+					"            \"module_name\": \"great_expectations.datasource.data_connector\",\r\n",
+					"            \"class_name\": \"RuntimeDataConnector\",\r\n",
+					"            \"batch_spec_passthrough\": {\r\n",
+					"                \"reader_method\": \"delta\",\r\n",
+					"                \"reader_options\": {\r\n",
+					"                    \"header\": True,\r\n",
+					"                    \"inferSchema\": True,\r\n",
+					"                },\r\n",
+					"            },\r\n",
+					"            \"batch_identifiers\": {\r\n",
+					"                \"customers_source\"\r\n",
+					"            },\r\n",
+					"\r\n",
+					"            }\r\n",
+					"            \r\n",
+					"        },\r\n",
+					"    }\r\n",
+					"    return ge_dataframe_datasource"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Prepare DataFrame for Data Source Connector to GE\r\n",
+					"#ge_context.add_datasource(**prepare_get_datasource())\r\n",
+					"#my_asset = ge_context.get_datasource(\"my_datasource\").get_asset(\"my_asset\")\r\n",
+					"#my_asset = ge_context.get_datasource(\"my_datasource\").get_asset(\"my_asset\")\r\n",
+					"\r\n",
+					"ge_context.add_datasource(**prepare_get_datasource())\r\n",
+					"#print(ge_context)"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# ge_context.delete_datasource('DataFrame_Customer_Data_Connector')"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"ge_context.get_available_data_asset_names()\r\n",
+					""
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Create a Validator"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"def prepare_runtime_batch(df:DataFrame):\r\n",
+					"    batch_request = RuntimeBatchRequest(\r\n",
+					"        datasource_name=\"DataFrame_Customer_Source\",\r\n",
+					"        data_connector_name=\"DataFrame_Customer_Data_Connector\",\r\n",
+					"        data_asset_name=\"customer_data_batch\",\r\n",
+					"        batch_identifiers={\r\n",
+					"            \"customers_source\": \"customers_source\",\r\n",
+					"        },\r\n",
+					"        runtime_parameters={\"batch_data\": df},\r\n",
+					"    )\r\n",
+					"    return batch_request"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"validator = ge_context.get_validator(\r\n",
+					"    batch_request=prepare_runtime_batch(df),\r\n",
+					"    create_expectation_suite_with_name=\"version-0.15.50 tenant_suite\",\r\n",
+					")\r\n",
+					"print(validator.head())"
+				]
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Create Expectations"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"ge_context.list_expectation_suite_names()"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"#ge_context.delete_expectation_suite(\"cusomers_suite\")"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"#add expectations suite to the data context\r\n",
+					"suite = ge_context.add_expectation_suite(expectation_suite_name=\"customers_suite\")"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from great_expectations.core.expectation_configuration import ExpectationConfiguration\r\n",
+					"\r\n",
+					"# Create an Expectation\r\n",
+					"expectation_configuration_1 = ExpectationConfiguration(\r\n",
+					"   # Name of expectation type being added\r\n",
+					"   expectation_type=\"expect_table_columns_to_match_ordered_list\",\r\n",
+					"   # These are the arguments of the expectation\r\n",
+					"   # The keys allowed in the dictionary are Parameters and\r\n",
+					"   # Keyword Arguments of this Expectation Type\r\n",
+					"   kwargs={\r\n",
+					"      \"column_list\": [\r\n",
+					"         \"id\", \"FirstName\", \"LastName\", \"City\", \"Country\", \"Phone\"\r\n",
+					"      ]\r\n",
+					"   },\r\n",
+					"   # This is how you can optionally add a comment about this expectation.\r\n",
+					"   # It will be rendered in Data Docs.\r\n",
+					"   # See this guide for details:\r\n",
+					"   # `How to add comments to Expectations and display them in Data Docs`.\r\n",
+					"   meta={\r\n",
+					"      \"notes\": {\r\n",
+					"         \"format\": \"markdown\",\r\n",
+					"         \"content\": \"Some clever comment about this expectation. **Markdown** `Supported`\"\r\n",
+					"      }\r\n",
+					"   },\r\n",
+					")\r\n",
+					"\r\n",
+					"# Create another Expectation\r\n",
+					"expectation_configuration_2 = ExpectationConfiguration( \r\n",
+					"   expectation_type=\"expect_table_row_count_to_equal\",\r\n",
+					"   kwargs={\r\n",
+					"      'domain': 'table', \r\n",
+					"      'value' : 800\r\n",
+					"   },\r\n",
+					"   meta={\r\n",
+					"      \"notes\": {\r\n",
+					"         \"format\": \"markdown\",\r\n",
+					"         \"content\": \"Some clever comment about this expectation. **Markdown** `Supported`\",\r\n",
+					"      }\r\n",
+					"   },\r\n",
+					")\r\n",
+					"\r\n",
+					"# Create another Expectation\r\n",
+					"expectation_configuration_3 = ExpectationConfiguration( \r\n",
+					"   expectation_type=\"expect_column_values_to_not_be_null\",\r\n",
+					"   kwargs={\r\n",
+					"    'column': 'Id',\r\n",
+					"      'domain': 'column', \r\n",
+					"\r\n",
+					"   },\r\n",
+					"   meta={\r\n",
+					"      \"notes\": {\r\n",
+					"         \"format\": \"markdown\",\r\n",
+					"         \"content\": \"Some clever comment about this expectation. **Markdown** `Supported`\",\r\n",
+					"      }\r\n",
+					"   },\r\n",
+					")\r\n",
+					"\r\n",
+					"# Add the Expectation to the suite\r\n",
+					"#suite.add_expectation(expectation_configuration=expectation_configuration_1)\r\n",
+					"#suite.add_expectation(expectation_configuration=expectation_configuration_2)\r\n",
+					"suite.add_expectation(expectation_configuration=expectation_configuration_3)\r\n",
+					"ge_context.add_or_update_expectation_suite(expectation_suite_name='customers_suite')\r\n",
+					""
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"display(customerSilverDF)"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"ge_context.get_available_data_asset_names()"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"#ge_context.delete_datasource('DataFrame_Customer_Data_Connector')"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"customers_batch_request = prepare_runtime_batch(customerSilverDF)\r\n",
+					"#print(customers_batch_request)\r\n",
+					"validator = ge_context.get_validator(\r\n",
+					"    #datasource_name=customers_batch_request.datasource_name,\r\n",
+					"    #data_connector_name=customers_batch_request.data_connector_name, \r\n",
+					"    #data_asset_name=customers_batch_request.data_asset_name\r\n",
+					"    batch_request=customers_batch_request,\r\n",
+					"    expectation_suite_name='customers_suite'\r\n",
+					")\r\n",
+					"\r\n",
+					"print(validator.head())\r\n",
+					"\r\n",
+					"\r\n",
+					"   "
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# 7. Prepare and Run Checkpoint"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"def prepare_checkpoint() -> dict:\r\n",
+					"    ge_customer_data_checkpoint = 'customer_check'\r\n",
+					"    checkpoint_config = {\r\n",
+					"        \"name\": ge_customer_data_checkpoint,\r\n",
+					"        \"config_version\":1.0,\r\n",
+					"        \"class_name\":\"SimpleCheckpoint\",\r\n",
+					"        \"run_name_template\": \"%Y%m%d-%H%M%S-cutomer-run\",\r\n",
+					"        \"action_list\": [\r\n",
+					"            {\r\n",
+					"                \"name\": \"store_validation_result\",\r\n",
+					"                \"action\": {\r\n",
+					"                    \"class_name\": \"StoreValidationResultAction\",\r\n",
+					"                },\r\n",
+					"            },\r\n",
+					"            {\r\n",
+					"                \"name\": \"store_evaluation_params\",\r\n",
+					"                \"action\": {\r\n",
+					"                    \"class_name\": \"StoreEvaluationParametersAction\",\r\n",
+					"                    },\r\n",
+					"            },\r\n",
+					"            {\r\n",
+					"                \"name\": \"update_data_docss\",\r\n",
+					"                \"action\": {\r\n",
+					"                    \"class_name\": \"UpdateDataDocsAction\",\r\n",
+					"                },\r\n",
+					"            },\r\n",
+					"        ],\r\n",
+					"    }\r\n",
+					"    return checkpoint_config"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"def run_checkpoint(context, batch_request):\r\n",
+					"    checkpoint_result = context.run_checkpoint(\r\n",
+					"        checkpoint_name=\"customer_check\",\r\n",
+					"        validations=[\r\n",
+					"            {\r\n",
+					"                \"batch_request\": batch_request,\r\n",
+					"                \"expectation_suite_name\": \"customers_suite\",\r\n",
+					"            }\r\n",
+					"        ],\r\n",
+					"    )\r\n",
+					"    return checkpoint_result"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"#ge_context.get_checkpoint"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"#ge_contect.delet_checkpoint(\"customer_check\")"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"#Prepare Checkpoint\r\n",
+					"customers_check = prepare_checkpoint()\r\n",
+					"ge_context.add_checkpoint(**customers_check)"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"ge_context.list_expectation_suite_names()\r\n",
+					"#ge_context.get_expectation_suite('customers_suite')\r\n",
+					"#ge_suite = ge_context.get_expectation_suite(\"customers_suite\")\r\n",
+					"#ge_suite.show_expectations_by_expectation_type()"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"ge_context.list_expectation_suite_names()\r\n",
+					"ge_suite = ge_context.get_expectation_suite('customers_suite')\r\n",
+					"ge_suite.show_expectations_by_expectation_type()"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"checkpoint_results = run_checkpoint(ge_context, customers_batch_request)\r\n",
+					"print(checkpoint_results)"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from great_expectations.data_context import EphemeralDataContext\r\n",
+					"\r\n",
+					"if isinstance(ge_context, EphemeralDataContext):\r\n",
+					"    print(\"It's Ephemeral!\")"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"ct = ge_context.convert_to_file_context()"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"ct_root_dir= ct.find_context_root_dir()\r\n",
+					"print(ct_root_dir)"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"prefix = \"file://\"\r\n",
+					"new_root_dir = prefix + ct_root_dir\r\n",
+					"print(new_root_dir)"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"mssparkutils.fs.cp(new_root_dir, \"abfss://gxtest@dlakefirstadf.dfs.core.windows.net\", True)\r\n",
+					""
+				],
+				"execution_count": null
+			}
+		]
+	}
+}
