@@ -16,6 +16,9 @@
 		},
 		"asfirstdf-WorkspaceDefaultStorage_properties_typeProperties_url": {
 			"value": "https://dlakefirstadf.dfs.core.windows.net"
+		},
+		"lsKV_properties_typeProperties_baseUrl": {
+			"value": "https://KV-firstdf.vault.azure.net/"
 		}
 	}
 }
