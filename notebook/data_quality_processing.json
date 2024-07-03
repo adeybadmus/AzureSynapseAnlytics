@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "f195cebe-69a8-4cba-8fd8-12782f36bd2c"
+				"spark.autotune.trackingId": "21b355fa-58de-429c-832c-3188aa45e4c5"
 			}
 		},
 		"metadata": {
@@ -106,7 +106,7 @@
 					"def get_kv_secretvalue(kvLinkedService, kvSecretName):\r\n",
 					"    return mssparkutils.credentials.getSecretWithLS(kvLinkedService, kvSecretName)"
 				],
-				"execution_count": 31
+				"execution_count": 33
 			},
 			{
 				"cell_type": "code",
@@ -124,9 +124,9 @@
 				"source": [
 					"# tenant_id = get_kv_secretvalue(\"KV-firstdf\", \"TenantId\", \"asfirstdf-WorkspaceDefaultSqlServer\")\r\n",
 					"\r\n",
-					"tenant_id = get_kv_secretvalue(\"asfirstdf-WorkspaceDefaultSqlServer\", \"TenantId\")"
+					"tenant_id = get_kv_secretvalue(\"lsKV\", \"TenantId\")"
 				],
-				"execution_count": 32
+				"execution_count": 39
 			}
 		]
 	}
