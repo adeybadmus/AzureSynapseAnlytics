@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "21b355fa-58de-429c-832c-3188aa45e4c5"
+				"spark.autotune.trackingId": "87971353-9e36-4a24-8cbd-3b6d8472e50b"
 			}
 		},
 		"metadata": {
@@ -67,7 +67,7 @@
 				"source": [
 					"pip install pyapacheatlas"
 				],
-				"execution_count": 2
+				"execution_count": 49
 			},
 			{
 				"cell_type": "code",
@@ -84,7 +84,7 @@
 					"\r\n",
 					""
 				],
-				"execution_count": 3
+				"execution_count": 50
 			},
 			{
 				"cell_type": "code",
@@ -106,7 +106,7 @@
 					"def get_kv_secretvalue(kvLinkedService, kvSecretName):\r\n",
 					"    return mssparkutils.credentials.getSecretWithLS(kvLinkedService, kvSecretName)"
 				],
-				"execution_count": 33
+				"execution_count": 51
 			},
 			{
 				"cell_type": "code",
@@ -124,9 +124,67 @@
 				"source": [
 					"# tenant_id = get_kv_secretvalue(\"KV-firstdf\", \"TenantId\", \"asfirstdf-WorkspaceDefaultSqlServer\")\r\n",
 					"\r\n",
-					"tenant_id = get_kv_secretvalue(\"lsKV\", \"TenantId\")"
+					"tenant_id = get_kv_secretvalue(\"lsKV\", \"TenantId\")\r\n",
+					"client_id = get_kv_secretvalue(\"lsKV\", \"SpPurviewAppId\")\r\n",
+					"client_secret = get_kv_secretvalue(\"lsKV\", \"SpPurviewKey\")\r\n",
+					"purview_account_name = get_kv_secretvalue(\"lsKV\", \"PurviewAccountName\")"
 				],
-				"execution_count": 39
+				"execution_count": 54
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"oauth = ServicePrincipalAuthentication(\r\n",
+					"    tenant_id=os.environ.get(\"TENANT_ID\", tenant_id),\r\n",
+					"    client_id=os.environ.get(\"CLIENT_ID\", client_id),\r\n",
+					"    client_secret=os.environ.get(\"CLIENT_SECRET\", client_secret),\r\n",
+					")\r\n",
+					"client = PurviewClient(\r\n",
+					"    account_name=os.environ.get(\"PURVIEW_NAME\", purview_account_name),\r\n",
+					"    authentication=oauth\r\n",
+					")\r\n",
+					"guid = GuidTracker()"
+				],
+				"execution_count": 55
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"def getValidationSchema (entityQualifiedName: str):\r\n",
+					"    entity = client_entity(qualifiedName=entityQualifiedName, type=\"azure_sql_table\")\r\n",
+					"    schema = \"\"\r\n",
+					"\r\n",
+					"    for column in entity[\"entities\"][0]['relationshipAttributes']['columns']:\r\n",
+					"        columnAttributes = client.get_entity(column['guid'])\r\n",
+					"        columnName = columnAttributes['entities']\r\n",
+					"\r\n",
+					"\r\n",
+					"\r\n",
+					""
+				],
+				"execution_count": null
 			}
 		]
 	}
