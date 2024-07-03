@@ -1,0 +1,133 @@
+{
+	"name": "data_quality_processing",
+	"properties": {
+		"folder": {
+			"name": "data_quality"
+		},
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "SynSalespool",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "21b355fa-58de-429c-832c-3188aa45e4c5"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/bb83342a-f18f-4eb9-af01-297fab968e48/resourceGroups/firstdf/providers/Microsoft.Synapse/workspaces/asfirstdf/bigDataPools/SynSalespool",
+				"name": "SynSalespool",
+				"type": "Spark",
+				"endpoint": "https://asfirstdf.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/SynSalespool",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.4",
+				"nodeCount": 10,
+				"cores": 4,
+				"memory": 28,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"pip install pyapacheatlas"
+				],
+				"execution_count": 2
+			},
+			{
+				"cell_type": "code",
+				"source": [
+					"import os, json, jmespath\r\n",
+					"from pyapacheatlas.core import AtlasEntity\r\n",
+					"from pyapacheatlas.core.util import GuidTracker\r\n",
+					"from pyapacheatlas.core import PurviewClient, AtlasEntity, AtlasProcess, TypeCategory\r\n",
+					"from pyapacheatlas.auth import ServicePrincipalAuthentication\r\n",
+					"from pyapacheatlas.core.typedef import AtlasAttributeDef, EntityTypeDef, RelationshipTypeDef\r\n",
+					"from pyspark.sql.types import StructType, StructField, StringType, ArrayType\r\n",
+					"from pyspark.sql.functions import explode, expr\r\n",
+					"from notebookutils import mssparkutils\r\n",
+					"\r\n",
+					""
+				],
+				"execution_count": 3
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# def get_kv_secretvalue(AzKVName, kvSecretName, kvLinkedService):\r\n",
+					"#     return mssparkutils.credentials.getSecret(AzKVName, kvSecretName, kvLinkedService)\r\n",
+					"\r\n",
+					"def get_kv_secretvalue(kvLinkedService, kvSecretName):\r\n",
+					"    return mssparkutils.credentials.getSecretWithLS(kvLinkedService, kvSecretName)"
+				],
+				"execution_count": 33
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# tenant_id = get_kv_secretvalue(\"KV-firstdf\", \"TenantId\", \"asfirstdf-WorkspaceDefaultSqlServer\")\r\n",
+					"\r\n",
+					"tenant_id = get_kv_secretvalue(\"lsKV\", \"TenantId\")"
+				],
+				"execution_count": 39
+			}
+		]
+	}
+}
