@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "594fe5bf-8da6-44a8-9c94-e2cee6644184"
+				"spark.autotune.trackingId": "45884890-b698-4cef-871c-38353598c0bd"
 			}
 		},
 		"metadata": {
@@ -65,9 +65,9 @@
 					}
 				},
 				"source": [
-					"#pip install pyapacheatlas"
+					"pip install pyapacheatlas"
 				],
-				"execution_count": 9
+				"execution_count": 2
 			},
 			{
 				"cell_type": "code",
@@ -80,10 +80,48 @@
 					"from pyapacheatlas.core.typedef import AtlasAttributeDef, EntityTypeDef, RelationshipTypeDef\r\n",
 					"from pyspark.sql.types import StructType, StructField, StringType, ArrayType\r\n",
 					"from pyspark.sql.functions import explode, expr\r\n",
+					"from notebookutils import mssparkutils\r\n",
 					"\r\n",
 					""
 				],
-				"execution_count": 12
+				"execution_count": 3
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"def get_kv_secretvalue(AzKVName, kvSecretName, kvLinkedService):\r\n",
+					"    return mssparkutils.credentials.getSecret(AzKVName, kvSecretName, kvLinkedService)"
+				],
+				"execution_count": 21
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"tenant_id = get_kv_secretvalue(\"KV-firstdf\", \"TenantId\", \"lsKV\")"
+				],
+				"execution_count": 23
 			}
 		]
 	}
