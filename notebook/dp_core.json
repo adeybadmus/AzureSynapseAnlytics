@@ -21,7 +21,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "0dd4d746-38f0-48ac-98cf-0f7d033f625e"
+				"spark.autotune.trackingId": "017b0b42-3d4b-4fd2-a75d-6f2c4ff884d8"
 			}
 		},
 		"metadata": {
@@ -60,7 +60,7 @@
 					"# import jsons\r\n",
 					"from pyspark.sql.types import StructType, StructField, StringType, IntegerType, LongType, TimestampType, DoubleType, BooleanType, NullType, DecimalType, FloatType, ShortType"
 				],
-				"execution_count": 3
+				"execution_count": 8
 			},
 			{
 				"cell_type": "markdown",
@@ -100,7 +100,7 @@
 					"            print(f\"{mountPath} already mounted.\")\r\n",
 					""
 				],
-				"execution_count": 5
+				"execution_count": 9
 			},
 			{
 				"cell_type": "markdown",
@@ -132,7 +132,7 @@
 					"def get_kv_secretvalue(kvLinkedService, kvSecretName):\r\n",
 					"    return mssparkutils.credentials.getSecretWithLS(kvLinkedService, kvSecretName)"
 				],
-				"execution_count": 6
+				"execution_count": 12
 			},
 			{
 				"cell_type": "code",
@@ -150,7 +150,7 @@
 				"source": [
 					"get_kv_secretvalue(\"lsKV\", \"TenantId\")"
 				],
-				"execution_count": 7
+				"execution_count": 13
 			},
 			{
 				"cell_type": "markdown",
